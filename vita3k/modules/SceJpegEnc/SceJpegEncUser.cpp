@@ -18,8 +18,8 @@
 #include "SceJpegEncUser.h"
 
 #include <codec/state.h>
+#include <codec/types.h>
 
-#include <jpegenc/types.h>
 #include <util/tracy.h>
 TRACY_MODULE_NAME(SceJpegEncUser);
 
@@ -56,15 +56,15 @@ EXPORT(int, sceJpegEncoderCsc, SceJpegEncoderContext *context, Ptr<uint8_t> outB
 
     bool is_yuv420 = false;
 
-    if ((context->pixelFormat & SCE_JPEGENC_PIXELFORMAT_YCBCR422) == SCE_JPEGENC_PIXELFORMAT_YCBCR422) {
+    if ((context->pixelFormat & SCE_JPEGENC_PIXEL_YCBCR422) == SCE_JPEGENC_PIXEL_YCBCR422) {
         is_yuv420 = false;
-    } else if ((context->pixelFormat & SCE_JPEGENC_PIXELFORMAT_YCBCR420) == SCE_JPEGENC_PIXELFORMAT_YCBCR420) {
+    } else if ((context->pixelFormat & SCE_JPEGENC_PIXEL_YCBCR420) == SCE_JPEGENC_PIXEL_YCBCR420) {
         is_yuv420 = true;
     } else {
         return SCE_JPEGENC_ERROR_INVALID_PIXELFORMAT;
     }
 
-    if (inPixelFormat != SCE_JPEGENC_PIXELFORMAT_ARGB8888) {
+    if (inPixelFormat != SCE_JPEGENC_PIXEL_ARGB8888) {
         return STUBBED("Only ARGB8888 to YCbCr is implemented.");
     }
 
@@ -87,9 +87,9 @@ EXPORT(int, sceJpegEncoderEncode, SceJpegEncoderContext *context, Ptr<uint8_t> i
 
     bool is_yuv420 = false;
 
-    if ((context->pixelFormat & SCE_JPEGENC_PIXELFORMAT_YCBCR422) == SCE_JPEGENC_PIXELFORMAT_YCBCR422) {
+    if ((context->pixelFormat & SCE_JPEGENC_PIXEL_YCBCR422) == SCE_JPEGENC_PIXEL_YCBCR422) {
         is_yuv420 = false;
-    } else if ((context->pixelFormat & SCE_JPEGENC_PIXELFORMAT_YCBCR420) == SCE_JPEGENC_PIXELFORMAT_YCBCR420) {
+    } else if ((context->pixelFormat & SCE_JPEGENC_PIXEL_YCBCR420) == SCE_JPEGENC_PIXEL_YCBCR420) {
         is_yuv420 = true;
     } else {
         return SCE_JPEGENC_ERROR_INVALID_PIXELFORMAT;
