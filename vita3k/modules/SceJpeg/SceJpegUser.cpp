@@ -75,7 +75,7 @@ EXPORT(int, sceJpegDecodeMJpeg, const unsigned char *pJpeg, SceSize isize, uint8
     state->decoder->send(pJpeg, isize);
     state->decoder->receive(temporary.data(), &size);
 
-    convert_yuv_to_rgb(temporary.data(), pRGBA, size.width, size.height, true);
+    convert_yuv_to_rgb(temporary.data(), pRGBA, size.width, size.height);
 
     // Top 16 bits = width, bottom 16 bits = height.
     return (size.width << 16u) | size.height;
@@ -150,7 +150,7 @@ EXPORT(int, sceJpegMJpegCsc, uint8_t *rgba, const uint8_t *yuv,
     uint32_t width = size >> 16u;
     uint32_t height = size & (~0u >> 16u);
 
-    convert_yuv_to_rgb(yuv, rgba, width, height, false);
+    convert_yuv_to_rgb(yuv, rgba, width, height);
 
     return 0;
 }
