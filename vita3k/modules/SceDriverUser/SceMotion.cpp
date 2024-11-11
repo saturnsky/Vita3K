@@ -35,18 +35,18 @@ EXPORT(int, sceMotionGetBasicOrientation, SceFVector3 *basicOrientation) {
         return RET_ERROR(SCE_MOTION_ERROR_NULL_PARAMETER);
 
     std::lock_guard<std::mutex> guard(emuenv.motion.mutex);
-    Util::Quaternion quat = get_orientation(emuenv.motion);
+    SceFVector3 accelerometer = get_acceleration(emuenv.motion);
 
     *basicOrientation = { 0.f, 0.f, 0.f };
     // get the basic orientation, only one component is not zero and will be 1 or -1
-    // TODO: this is probably wrong
-    float max_val = std::max({ std::abs(quat.xyz.x), std::abs(quat.xyz.y), std::abs(quat.xyz.z) });
-    if (max_val == std::abs(quat.xyz.x)) {
-        basicOrientation->x = quat.xyz.x > 0.0f ? 1.0f : -1.0f;
-    } else if (max_val == std::abs(quat.xyz.y)) {
-        basicOrientation->y = quat.xyz.y > 0.0f ? 1.0f : -1.0f;
+    // The basic orientation is determined by gravity, so it uses the Accelerometer value.
+    float max_val = std::max({ std::abs(accelerometer.x), std::abs(accelerometer.y), std::abs(accelerometer.z) });
+    if (max_val == std::abs(accelerometer.x)) {
+        basicOrientation->x = accelerometer.x > 0.0f ? -1.0f : 1.0f;
+    } else if (max_val == std::abs(accelerometer.y)) {
+        basicOrientation->y = accelerometer.y > 0.0f ? -1.0f : 1.0f;
     } else {
-        basicOrientation->z = quat.xyz.z > 0.0f ? 1.0f : -1.0f;
+        basicOrientation->z = accelerometer.z > 0.0f ? -1.0f : 1.0f;
     }
 
     return 0;
@@ -153,6 +153,8 @@ EXPORT(int, sceMotionGetState, SceMotionState *motionState) {
         }
     }
 
+    CALL_EXPORT(sceMotionGetBasicOrientation, &motionState->basicOrientation);
+
     return 0;
 }
 
@@ -193,7 +195,10 @@ EXPORT(int, sceMotionMagnetometerOn) {
 
 EXPORT(int, sceMotionReset) {
     TRACY_FUNC(sceMotionReset);
-    return UNIMPLEMENTED();
+    std::lock_guard<std::mutex> guard(emuenv.motion.mutex);
+    emuenv.motion.motion_data.SetQuaternion({ { 0.0f, 0.0f, -1.0f }, 0.0f });
+    emuenv.motion.motion_data.ResetRotations();
+    return 0;
 }
 
 EXPORT(int, sceMotionResetExt) {
