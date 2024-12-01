@@ -304,7 +304,7 @@ bool init(EmuEnvState &state, Config &cfg, const Root &root_paths) {
         if (file.is_open()) {
             std::string line;
             while (std::getline(file, line)) {
-                if (line.find("VARIANT_ID=steamdeck") != std::string::npos)
+                if (line.find("VARIANT_ID=steamdeck") != std::string::npos || line.find("VARIANT_ID=bazzite-deck") != std::string::npos)
                     return true;
             }
         }
