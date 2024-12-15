@@ -729,7 +729,8 @@ void init(GuiState &gui, EmuEnvState &emuenv) {
 }
 
 void draw_begin(GuiState &gui, EmuEnvState &emuenv) {
-    ImGui_ImplSdl_NewFrame(gui.imgui_state.get());
+    float manual_scale = emuenv.use_manual_dpi_scaling ? emuenv.dpi_scale : 1.f;
+    ImGui_ImplSdl_NewFrame(gui.imgui_state.get(), manual_scale);
     emuenv.renderer_focused = !ImGui::GetIO().WantCaptureMouse;
 
     // async loading, renderer texture creation needs to be synchronous

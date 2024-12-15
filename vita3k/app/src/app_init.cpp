@@ -50,6 +50,11 @@
 #include <dwmapi.h>
 #endif
 
+#ifdef __LINUX__
+#include <X11/Xlib.h>
+#include <X11/Xresource.h>
+#endif
+
 namespace app {
 void update_viewport(EmuEnvState &state) {
     int w = 0;
@@ -258,6 +263,53 @@ void init_paths(Root &root_paths) {
     fs::create_directories(root_paths.get_patch_path());
 }
 
+#ifdef __LINUX__
+static float fetch_x11_display_dpi() {
+    int dpi = 96;
+
+    Display *display;
+    char *resourceString;
+    XrmDatabase db;
+    XrmValue value;
+    char *type;
+
+    // Xrm initialization
+    XrmInitialize();
+
+    // Open the display
+    display = XOpenDisplay(NULL);
+    if (!display) {
+        // Unable to open X display
+        return 1.0;
+    }
+
+    // Get the resource manager string from the X server
+    resourceString = XResourceManagerString(display);
+    if (!resourceString) {
+        // No resource manager string found
+        XCloseDisplay(display);
+        return 1.0;
+    }
+
+    db = XrmGetStringDatabase(resourceString);
+
+    // Search for the Xft.dpi value
+    if (XrmGetResource(db, "Xft.dpi", "Xft.Dpi", &type, &value)) {
+        if (type && strcmp(type, "String") == 0) {
+            dpi = std::stoi(value.addr);
+        } else {
+            // Xft.dpi found but not a string
+        }
+    } else {
+        // Xft.dpi not found
+    }
+
+    XCloseDisplay(display);
+
+    return dpi / 96 > 1 ? dpi / 96 : 1.0;
+}
+#endif
+
 bool init(EmuEnvState &state, Config &cfg, const Root &root_paths) {
     state.cfg = std::move(cfg);
 
@@ -327,7 +379,16 @@ bool init(EmuEnvState &state, Config &cfg, const Root &root_paths) {
         window_type |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
 
-    state.window = WindowPtr(SDL_CreateWindow(window_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DEFAULT_RES_WIDTH, DEFAULT_RES_HEIGHT, window_type | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), SDL_DestroyWindow);
+    #ifdef __LINUX__
+    if (SDL_GetCurrentVideoDriver() && std::string(SDL_GetCurrentVideoDriver()) == "x11") {
+        state.dpi_scale = fetch_x11_display_dpi();
+        if (state.dpi_scale > 1.0) {
+            state.use_manual_dpi_scaling = true;
+        }
+    }
+    #endif
+
+    state.window = WindowPtr(SDL_CreateWindow(window_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, state.use_manual_dpi_scaling ? DEFAULT_RES_WIDTH * state.dpi_scale : DEFAULT_RES_WIDTH, state.use_manual_dpi_scaling ? DEFAULT_RES_HEIGHT * state.dpi_scale : DEFAULT_RES_HEIGHT, window_type | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), SDL_DestroyWindow);
 
     if (!state.window) {
         LOG_ERROR("SDL failed to create window!");
