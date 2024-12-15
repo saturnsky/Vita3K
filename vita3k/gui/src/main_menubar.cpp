@@ -54,9 +54,8 @@ static void draw_emulation_menu(GuiState &gui, EmuEnvState &emuenv) {
     auto &lang = gui.lang.main_menubar.emulation;
     const ImVec2 VIEWPORT_SIZE(emuenv.logical_viewport_size.x, emuenv.logical_viewport_size.y);
     const ImVec2 RES_SCALE(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const ImVec2 SCALE(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
-    const ImVec2 ICON_SIZE(56.f * SCALE.x, 56.f * SCALE.y);
-    const auto PADDING = 10.f * SCALE.x;
+    const ImVec2 ICON_SIZE(56.f * RES_SCALE.x, 56.f * RES_SCALE.y);
+    const auto PADDING = 10.f * RES_SCALE.x;
 
     const auto draw_app = [&](const App &app) {
         ImGui::PushStyleColor(ImGuiCol_Text, GUI_COLOR_TEXT_TITLE);
@@ -65,7 +64,7 @@ static void draw_emulation_menu(GuiState &gui, EmuEnvState &emuenv) {
         if (!APP_ICON->first.empty()) {
             const auto POS_MIN = ImGui::GetCursorScreenPos();
             const ImVec2 POS_MAX(POS_MIN.x + ICON_SIZE.x, POS_MIN.y + ICON_SIZE.y);
-            ImGui::GetWindowDrawList()->AddImageRounded(APP_ICON->second, POS_MIN, POS_MAX, ImVec2(0, 0), ImVec2(1, 1), IM_COL32_WHITE, ICON_SIZE.x * SCALE.x, ImDrawFlags_RoundCornersAll);
+            ImGui::GetWindowDrawList()->AddImageRounded(APP_ICON->second, POS_MIN, POS_MAX, ImVec2(0, 0), ImVec2(1, 1), IM_COL32_WHITE, ICON_SIZE.x * RES_SCALE.x, ImDrawFlags_RoundCornersAll);
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ICON_SIZE.x + PADDING);
         }
         ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));
@@ -78,7 +77,7 @@ static void draw_emulation_menu(GuiState &gui, EmuEnvState &emuenv) {
 
     if (ImGui::BeginMenu(lang["title"].c_str())) {
         const auto app_list_is_empty = gui.time_apps[emuenv.io.user_id].empty();
-        ImGui::SetNextWindowSize(ImVec2(!app_list_is_empty ? 480.f * SCALE.x : 0.f, 0.f));
+        ImGui::SetNextWindowSize(ImVec2(!app_list_is_empty ? 480.f * RES_SCALE.x : 0.f, 0.f));
         ImGui::SetWindowFontScale(RES_SCALE.x);
         if (ImGui::BeginMenu(lang["last_apps_used"].c_str())) {
             if (!app_list_is_empty) {
