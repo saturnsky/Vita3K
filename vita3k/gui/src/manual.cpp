@@ -138,14 +138,13 @@ void draw_manual(GuiState &gui, EmuEnvState &emuenv) {
     // Set settings and begin child window for manual pages
     const ImVec2 display_size(emuenv.logical_viewport_size.x, emuenv.logical_viewport_size.y);
     const auto RES_SCALE = ImVec2(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const auto SCALE = ImVec2(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
     const ImVec2 WINDOW_POS(emuenv.logical_viewport_pos.x, emuenv.logical_viewport_pos.y);
     ImGui::SetNextWindowPos(WINDOW_POS, ImGuiCond_Always);
     ImGui::BeginChild("##manual_page", display_size, ImGuiChildFlags_None, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoSavedSettings);
 
     // Draw manual image if exists and is valid
     if (!gui.manuals.empty() && gui.manuals[current_page])
-        ImGui::Image(gui.manuals[current_page], ImVec2(display_size.x, height_manual_pages[current_page] * SCALE.y));
+        ImGui::Image(gui.manuals[current_page], ImVec2(display_size.x, height_manual_pages[current_page] * RES_SCALE.y));
 
     // Set max scroll
     max_scroll = ImGui::GetScrollMaxY();
@@ -153,9 +152,9 @@ void draw_manual(GuiState &gui, EmuEnvState &emuenv) {
     // Set scroll with mouse wheel or keyboard up/down keys
     const auto wheel_counter = ImGui::GetIO().MouseWheel;
     if ((wheel_counter == 1.f) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_leftstick_up)))
-        scroll -= std::min(40.f * SCALE.y, scroll);
+        scroll -= std::min(40.f * RES_SCALE.y, scroll);
     else if ((wheel_counter == -1.f) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_leftstick_down)))
-        scroll += std::min(40.f * SCALE.y, max_scroll - scroll);
+        scroll += std::min(40.f * RES_SCALE.y, max_scroll - scroll);
 
     // Set scroll y position
     ImGui::SetScrollY(scroll);
@@ -172,25 +171,25 @@ void draw_manual(GuiState &gui, EmuEnvState &emuenv) {
         hidden_button = !hidden_button;
 
     // Set button size
-    const auto BUTTON_SIZE = ImVec2(65.f * SCALE.x, 30.f * SCALE.y);
+    const auto BUTTON_SIZE = ImVec2(65.f * RES_SCALE.x, 30.f * RES_SCALE.y);
 
     // Draw esc button
-    ImGui::SetCursorPos(ImVec2(5.0f * SCALE.x, 10.0f * SCALE.y));
+    ImGui::SetCursorPos(ImVec2(5.0f * RES_SCALE.x, 10.0f * RES_SCALE.y));
     if ((!hidden_button && ImGui::Button("Esc", BUTTON_SIZE)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_psbutton)))
         gui::close_system_app(gui, emuenv);
 
     // Draw manual scroll bar when is available
     if (max_scroll) {
-        ImGui::SetCursorPos(ImVec2(display_size.x - (18.f * SCALE.x), 10.f * SCALE.y));
-        ImGui::PushStyleVar(ImGuiStyleVar_GrabMinSize, 174.f * SCALE.y);
-        ImGui::PushStyleVar(ImGuiStyleVar_GrabRounding, 40.f * SCALE.y);
-        ImGui::VSliderFloat("##manual_scroll_bar", ImVec2(8.f * SCALE.x, 460.f * SCALE.y), &scroll, max_scroll, 0, "");
+        ImGui::SetCursorPos(ImVec2(display_size.x - (18.f * RES_SCALE.x), 10.f * RES_SCALE.y));
+        ImGui::PushStyleVar(ImGuiStyleVar_GrabMinSize, 174.f * RES_SCALE.y);
+        ImGui::PushStyleVar(ImGuiStyleVar_GrabRounding, 40.f * RES_SCALE.y);
+        ImGui::VSliderFloat("##manual_scroll_bar", ImVec2(8.f * RES_SCALE.x, 460.f * RES_SCALE.y), &scroll, max_scroll, 0, "");
         ImGui::PopStyleVar(2);
     }
 
     // Draw left button
     if (current_page > 0) {
-        ImGui::SetCursorPos(ImVec2(5.0f * SCALE.x, display_size.y - (40.0f * SCALE.y)));
+        ImGui::SetCursorPos(ImVec2(5.0f * RES_SCALE.x, display_size.y - (40.0f * RES_SCALE.y)));
         if ((!hidden_button && ImGui::Button("<", BUTTON_SIZE)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_leftstick_left))) {
             --current_page;
             scroll = 0.f;
@@ -199,20 +198,20 @@ void draw_manual(GuiState &gui, EmuEnvState &emuenv) {
 
     // Draw browser page button
     if (!hidden_button) {
-        ImGui::SetCursorPos(ImVec2(display_size.x / 2.f - ((BUTTON_SIZE.x / 2.f)), display_size.y - (40.f * SCALE.y)));
+        ImGui::SetCursorPos(ImVec2(display_size.x / 2.f - ((BUTTON_SIZE.x / 2.f)), display_size.y - (40.f * RES_SCALE.y)));
         const std::string slider = fmt::format("{:0>2d}/{:0>2d}", current_page + 1, (int32_t)gui.manuals.size());
         if (ImGui::Button(slider.c_str(), BUTTON_SIZE))
             ImGui::OpenPopup("Manual Slider");
-        const auto POPUP_HEIGHT = 64.f * SCALE.y;
+        const auto POPUP_HEIGHT = 64.f * RES_SCALE.y;
         ImGui::SetNextWindowPos(ImVec2(0.f, display_size.y - POPUP_HEIGHT), ImGuiCond_Always);
         ImGui::SetNextWindowSize(ImVec2(display_size.x, POPUP_HEIGHT), ImGuiCond_Always);
         ImGui::SetNextWindowBgAlpha(0.7f);
         if (ImGui::BeginPopupModal("Manual Slider", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings)) {
-            const auto SLIDER_WIDTH = 800.f * SCALE.x;
+            const auto SLIDER_WIDTH = 800.f * RES_SCALE.x;
             ImGui::PushItemWidth(SLIDER_WIDTH);
-            ImGui::PushStyleVar(ImGuiStyleVar_GrabMinSize, 26.f * SCALE.y);
-            ImGui::PushStyleVar(ImGuiStyleVar_GrabRounding, 50.f * SCALE.y);
-            ImGui::SetCursorPos(ImVec2((display_size.x / 2) - (SLIDER_WIDTH / 2.f), (POPUP_HEIGHT / 2) - (15.f * SCALE.x)));
+            ImGui::PushStyleVar(ImGuiStyleVar_GrabMinSize, 26.f * RES_SCALE.y);
+            ImGui::PushStyleVar(ImGuiStyleVar_GrabRounding, 50.f * RES_SCALE.y);
+            ImGui::SetCursorPos(ImVec2((display_size.x / 2) - (SLIDER_WIDTH / 2.f), (POPUP_HEIGHT / 2) - (15.f * RES_SCALE.x)));
             ImGui::SliderInt("##slider_current_manual", &current_page, 0, (int32_t)gui.manuals.size() - 1, slider.c_str());
             ImGui::PopStyleVar(2);
             ImGui::PopItemWidth();
@@ -224,7 +223,7 @@ void draw_manual(GuiState &gui, EmuEnvState &emuenv) {
 
     // Draw right button
     if (current_page < (int)gui.manuals.size() - 1) {
-        ImGui::SetCursorPos(ImVec2(display_size.x - (70.f * SCALE.x), display_size.y - (40.0f * SCALE.y)));
+        ImGui::SetCursorPos(ImVec2(display_size.x - (70.f * RES_SCALE.x), display_size.y - (40.0f * RES_SCALE.y)));
         if ((!hidden_button && ImGui::Button(">", BUTTON_SIZE)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_leftstick_right))) {
             scroll = 0.f;
             ++current_page;
