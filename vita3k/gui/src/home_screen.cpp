@@ -868,7 +868,7 @@ void draw_home_screen(GuiState &gui, EmuEnvState &emuenv) {
                 if (IS_CUSTOM_CONFIG) {
                     if (emuenv.cfg.apps_list_grid)
                         ImGui::SetCursorPosX(GRID_ICON_POS);
-                    ImGui::SetCursorPosY(POS_ICON.y + ICON_SIZE.y - ImGui::GetFontSize() - (7.8f * emuenv.dpi_scale));
+                    ImGui::SetCursorPosY(POS_ICON.y + ICON_SIZE.y - ImGui::GetFontSize() - 7.8f);
                     ImGui::PushStyleColor(ImGuiCol_Text, GUI_COLOR_TEXT_TITLE);
                     ImGui::Button("CC", ImVec2(40.f * VIEWPORT_RES_SCALE.x, 0.f));
                     ImGui::PopStyleColor();

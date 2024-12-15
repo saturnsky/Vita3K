@@ -1044,7 +1044,7 @@ void draw_live_area_screen(GuiState &gui, EmuEnvState &emuenv) {
     }
 
     ImGui::SetWindowFontScale(RES_SCALE.x);
-    const auto default_font_scale = (25.f * emuenv.dpi_scale) * (ImGui::GetFontSize() / (19.2f * emuenv.dpi_scale));
+    const auto default_font_scale = 25.f * (ImGui::GetFontSize() / 19.2f);
     const auto font_size_scale = default_font_scale / ImGui::GetFontSize();
 
     const auto gate_pos = items_styles[app_type].gate_pos;

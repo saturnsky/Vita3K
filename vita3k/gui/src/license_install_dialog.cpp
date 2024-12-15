@@ -102,7 +102,7 @@ void draw_license_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
         ImGui::Spacing();
         ImGui::Separator();
         ImGui::Spacing();
-        ImGui::SetCursorPos(ImVec2(POS_BUTTON - (BUTTON_SIZE.x / 2) - 10.f * emuenv.dpi_scale, ImGui::GetWindowSize().y / 2));
+        ImGui::SetCursorPos(ImVec2(POS_BUTTON - (BUTTON_SIZE.x / 2) - 10.f, ImGui::GetWindowSize().y / 2));
         if (ImGui::Button(common["cancel"].c_str(), BUTTON_SIZE)) {
             state = State::UNDEFINED;
             zRIF.clear();

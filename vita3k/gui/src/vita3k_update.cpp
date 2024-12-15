@@ -353,7 +353,7 @@ void draw_vita3k_update(GuiState &gui, EmuEnvState &emuenv) {
         ImGui::SetCursorPos(ImVec2((ImGui::GetWindowWidth() / 2) - (PROGRESS_BAR_WIDTH / 2.f), display_size.y - (186.f * RES_SCALE.y)));
         ImGui::PushStyleColor(ImGuiCol_PlotHistogram, GUI_PROGRESS_BAR);
         ImGui::ProgressBar(progress / 100.f, ImVec2(PROGRESS_BAR_WIDTH, 15.f * RES_SCALE.y), "");
-        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 16.f * emuenv.dpi_scale);
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 16.f);
         TextColoredCentered(GUI_COLOR_TEXT, std::to_string(uint32_t(progress)).append("%").c_str());
         ImGui::PopStyleColor();
 

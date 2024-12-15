@@ -929,7 +929,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                 title = language.input_language["title"];
                 ImGui::SetWindowFontScale(1.2f);
                 ImGui::Columns(2, nullptr, false);
-                ImGui::SetColumnWidth(0, 600.f * emuenv.dpi_scale);
+                ImGui::SetColumnWidth(0, 600.f);
                 ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.f, 0.5f));
                 if (ImGui::Selectable(keyboards_str, false, ImGuiSelectableFlags_SpanAllColumns, ImVec2(0.f, SIZE_SELECT)))
                     sub_menu = SubMenu::SELECT_KEYBOARDS;
@@ -946,8 +946,8 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                 if (selected.empty()) {
                     title = keyboards_str;
                     ImGui::Columns(3, nullptr, false);
-                    ImGui::SetColumnWidth(0, 40.f * emuenv.dpi_scale);
-                    ImGui::SetColumnWidth(1, 560.f * emuenv.dpi_scale);
+                    ImGui::SetColumnWidth(0, 40.f);
+                    ImGui::SetColumnWidth(1, 560.f);
                     for (const auto &lang : emuenv.ime.lang.ime_keyboards) {
                         ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.f, 0.5f));
                         ImGui::PushID(lang.first);

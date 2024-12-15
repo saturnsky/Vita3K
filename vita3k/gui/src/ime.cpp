@@ -285,7 +285,7 @@ void draw_ime(Ime &ime, EmuEnvState &emuenv) {
     ImGui::SetNextWindowPos(ImVec2(0.f, display_size.y - (248.f * RES_SCALE.y)), ImGuiCond_Always, ImVec2(0.f, 0.f));
     ImGui::SetNextWindowSize(ImVec2(display_size.x, 248.f * RES_SCALE.y));
     ImGui::Begin("##ime", &ime.state, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * emuenv.dpi_scale);
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f);
     ImGui::PushStyleColor(ImGuiCol_Button, GUI_COLOR_TEXT);
     ImGui::PushStyleColor(ImGuiCol_Text, GUI_COLOR_TEXT_BLACK);
     ImGui::SetWindowFontScale(RES_SCALE.x);
