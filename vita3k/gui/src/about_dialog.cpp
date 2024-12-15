@@ -57,7 +57,6 @@ static constexpr std::array supporters_list = {
 void draw_about_dialog(GuiState &gui, EmuEnvState &emuenv) {
     const ImVec2 display_size(emuenv.logical_viewport_size.x, emuenv.logical_viewport_size.y);
     const ImVec2 RES_SCALE(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const ImVec2 SCALE(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
     static const auto BUTTON_SIZE = ImVec2(120.f * emuenv.dpi_scale, 0.f);
 
     auto &lang = gui.lang.about;
@@ -120,7 +119,7 @@ void draw_about_dialog(GuiState &gui, EmuEnvState &emuenv) {
     TextColoredCentered(GUI_COLOR_TEXT_MENUBAR, lang["vita3k_staff"].c_str());
     ImGui::Spacing();
 
-    const auto STAFF_LIST_SIZE = ImVec2(630.f * SCALE.x, 160.f * SCALE.y);
+    const auto STAFF_LIST_SIZE = ImVec2(630.f * RES_SCALE.x, 160.f * RES_SCALE.y);
     static constexpr int STAFF_COLUMN_COUNT(3);
     const float STAFF_COLUMN_SIZE(STAFF_LIST_SIZE.x / STAFF_COLUMN_COUNT);
     const float STAFF_COLUMN_POS(ImGui::GetWindowWidth() / 2.f - (STAFF_LIST_SIZE.x / 2.f));

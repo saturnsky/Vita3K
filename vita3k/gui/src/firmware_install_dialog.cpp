@@ -49,9 +49,8 @@ void draw_firmware_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
 
     const ImVec2 display_size(emuenv.logical_viewport_size.x, emuenv.logical_viewport_size.y);
     const ImVec2 RES_SCALE(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const ImVec2 SCALE(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
-    const ImVec2 WINDOW_SIZE(616.f * SCALE.x, 264.f * SCALE.y);
-    const ImVec2 BUTTON_SIZE(160.f * SCALE.x, 45.f * SCALE.y);
+    const ImVec2 WINDOW_SIZE(616.f * RES_SCALE.x, 264.f * RES_SCALE.y);
+    const ImVec2 BUTTON_SIZE(160.f * RES_SCALE.x, 45.f * RES_SCALE.y);
 
     ImGui::SetNextWindowPos(ImVec2(emuenv.logical_viewport_pos.x + (display_size.x / 2.f) - (WINDOW_SIZE.x / 2), emuenv.logical_viewport_pos.y + (display_size.y / 2.f) - (WINDOW_SIZE.y / 2.f)), ImGuiCond_Always);
     ImGui::SetNextWindowSize(WINDOW_SIZE);
@@ -93,13 +92,13 @@ void draw_firmware_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
             ImGui::Spacing();
             ImGui::Separator();
             ImGui::Spacing();
-            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 30.f * SCALE.y);
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 30.f * RES_SCALE.y);
             TextColoredCentered(GUI_COLOR_TEXT, lang["firmware_installing"].c_str());
-            const float PROGRESS_BAR_WIDTH = 502.f * SCALE.x;
-            ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2.f) - (PROGRESS_BAR_WIDTH / 2.f), ImGui::GetCursorPosY() + 30.f * SCALE.y));
+            const float PROGRESS_BAR_WIDTH = 502.f * RES_SCALE.x;
+            ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2.f) - (PROGRESS_BAR_WIDTH / 2.f), ImGui::GetCursorPosY() + 30.f * RES_SCALE.y));
             ImGui::PushStyleColor(ImGuiCol_PlotHistogram, GUI_PROGRESS_BAR);
-            ImGui::ProgressBar(progress / 100.f, ImVec2(PROGRESS_BAR_WIDTH, 15.f * SCALE.x), "");
-            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 16.f * SCALE.y);
+            ImGui::ProgressBar(progress / 100.f, ImVec2(PROGRESS_BAR_WIDTH, 15.f * RES_SCALE.x), "");
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 16.f * RES_SCALE.y);
             TextColoredCentered(GUI_COLOR_TEXT, std::to_string(progress).append("%").c_str());
             ImGui::PopStyleColor();
         }
@@ -108,7 +107,7 @@ void draw_firmware_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
         ImGui::OpenPopup("firmware_installation");
         if (ImGui::BeginPopupModal("firmware_installation", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration)) {
             ImGui::SetWindowFontScale(RES_SCALE.x);
-            const auto POS_BUTTON = (WINDOW_SIZE.x / 2.f) - (BUTTON_SIZE.x / 2.f) + (10.f * SCALE.x);
+            const auto POS_BUTTON = (WINDOW_SIZE.x / 2.f) - (BUTTON_SIZE.x / 2.f) + (10.f * RES_SCALE.x);
             TextColoredCentered(GUI_COLOR_TEXT_TITLE, lang["successed_install_firmware"].c_str());
             ImGui::Spacing();
             ImGui::Separator();
@@ -130,7 +129,7 @@ void draw_firmware_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
             }
             ImGui::Checkbox(lang["delete_firmware"].c_str(), &delete_pup_file);
             ImGui::Spacing();
-            ImGui::SetCursorPos(ImVec2(POS_BUTTON, ImGui::GetWindowSize().y - BUTTON_SIZE.y - (20.f * SCALE.y)));
+            ImGui::SetCursorPos(ImVec2(POS_BUTTON, ImGui::GetWindowSize().y - BUTTON_SIZE.y - (20.f * RES_SCALE.y)));
             if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE)) {
                 if (delete_pup_file) {
                     fs::remove(fs::path(pup_path.native()));
