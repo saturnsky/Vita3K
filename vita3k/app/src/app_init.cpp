@@ -279,14 +279,14 @@ static float fetch_x11_display_dpi() {
     // Open the display
     display = XOpenDisplay(NULL);
     if (!display) {
-        // Unable to open X display
+        LOG_INFO("Unable to open X display");
         return 1.0;
     }
 
     // Get the resource manager string from the X server
     resourceString = XResourceManagerString(display);
     if (!resourceString) {
-        // No resource manager string found
+        LOG_INFO("No resource manager string found");
         XCloseDisplay(display);
         return 1.0;
     }
@@ -298,10 +298,10 @@ static float fetch_x11_display_dpi() {
         if (type && strcmp(type, "String") == 0) {
             dpi = std::stoi(value.addr);
         } else {
-            // Xft.dpi found but not a string
+            LOG_INFO("Xft.dpi found but not a string");
         }
     } else {
-        // Xft.dpi not found
+        LOG_INFO("Xft.dpi not found in X resources");
     }
 
     XCloseDisplay(display);
@@ -381,6 +381,7 @@ bool init(EmuEnvState &state, Config &cfg, const Root &root_paths) {
 
     #ifdef __LINUX__
     if (SDL_GetCurrentVideoDriver() && std::string(SDL_GetCurrentVideoDriver()) == "x11") {
+        // X11 does not provide High DPI support, so manually set the High DPI scale
         state.dpi_scale = fetch_x11_display_dpi();
         if (state.dpi_scale > 1.0) {
             state.use_manual_dpi_scaling = true;
