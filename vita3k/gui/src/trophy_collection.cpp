@@ -414,22 +414,21 @@ void open_trophy_unlocked(GuiState &gui, EmuEnvState &emuenv, const std::string 
 void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
     const ImVec2 VIEWPORT_POS(emuenv.logical_viewport_pos.x, emuenv.logical_viewport_pos.y);
     const ImVec2 VIEWPORT_SIZE(emuenv.logical_viewport_size.x, emuenv.logical_viewport_size.y);
-    const ImVec2 RES_SCALE(VIEWPORT_SIZE.x / emuenv.res_width_dpi_scale, VIEWPORT_SIZE.y / emuenv.res_height_dpi_scale);
-    const ImVec2 SCALE(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
+    const ImVec2 RES_SCALE(emuenv.gui_scale.x, emuenv.gui_scale.y);
 
-    const auto INFORMATION_BAR_HEIGHT = 32.f * SCALE.y;
+    const auto INFORMATION_BAR_HEIGHT = 32.f * RES_SCALE.y;
 
-    const auto SIZE_ICON_LIST = ImVec2(160.f * SCALE.x, 88.f * SCALE.y);
-    const auto SIZE_TROPHY_LIST = ImVec2(80.f * SCALE.x, 80.f * SCALE.y);
+    const auto SIZE_ICON_LIST = ImVec2(160.f * RES_SCALE.x, 88.f * RES_SCALE.y);
+    const auto SIZE_TROPHY_LIST = ImVec2(80.f * RES_SCALE.x, 80.f * RES_SCALE.y);
 
-    const auto BUTTON_SIZE = ImVec2(310.f * SCALE.x, 46.f * SCALE.y);
+    const auto BUTTON_SIZE = ImVec2(310.f * RES_SCALE.x, 46.f * RES_SCALE.y);
 
     const ImVec2 WINDOW_POS(VIEWPORT_POS.x, VIEWPORT_POS.y + INFORMATION_BAR_HEIGHT);
     const ImVec2 WINDOW_SIZE(VIEWPORT_SIZE.x, VIEWPORT_SIZE.y - INFORMATION_BAR_HEIGHT);
 
-    const auto SIZE_LIST = ImVec2((!np_com_id_selected.empty() && group_id_selected.empty() ? 810.f : 790.f) * SCALE.x, 442.f * SCALE.y);
-    const auto SIZE_INFO = ImVec2(820.f * SCALE.x, 484.f * SCALE.y);
-    const auto POPUP_SIZE = ImVec2(756.0f * SCALE.x, 436.0f * SCALE.y);
+    const auto SIZE_LIST = ImVec2((!np_com_id_selected.empty() && group_id_selected.empty() ? 810.f : 790.f) * RES_SCALE.x, 442.f * RES_SCALE.y);
+    const auto SIZE_INFO = ImVec2(820.f * RES_SCALE.x, 484.f * RES_SCALE.y);
+    const auto POPUP_SIZE = ImVec2(756.0f * RES_SCALE.x, 436.0f * RES_SCALE.y);
 
     const auto TROPHY_PATH{ emuenv.pref_path / "ux0/user" / emuenv.io.user_id / "trophy" };
 
@@ -458,24 +457,24 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
     if (group_id_selected.empty()) {
         ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
         if (!np_com_id_list.empty() && np_com_id_selected.empty()) {
-            ImGui::SetCursorPos(ImVec2(VIEWPORT_POS.x + (10.f * SCALE.x), VIEWPORT_POS.y + (27.f * SCALE.y) - (ImGui::CalcTextSize(common["search"].c_str()).y / 2.f)));
+            ImGui::SetCursorPos(ImVec2(VIEWPORT_POS.x + (10.f * RES_SCALE.x), VIEWPORT_POS.y + (27.f * RES_SCALE.y) - (ImGui::CalcTextSize(common["search"].c_str()).y / 2.f)));
             ImGui::TextColored(GUI_COLOR_TEXT, "%s", common["search"].c_str());
             ImGui::SameLine();
-            search_bar.Draw("##search_bar", 180 * SCALE.x);
+            search_bar.Draw("##search_bar", 180 * RES_SCALE.x);
         }
-        ImGui::SetCursorPos(ImVec2(WINDOW_SIZE.x - (285.f * SCALE.x), (15.f * SCALE.y)));
+        ImGui::SetCursorPos(ImVec2(WINDOW_SIZE.x - (285.f * RES_SCALE.x), (15.f * RES_SCALE.y)));
         ImGui::TextColored(GUI_COLOR_TEXT, "P   G   S   B");
-        ImGui::SetCursorPosY(54.f * SCALE.y);
+        ImGui::SetCursorPosY(54.f * RES_SCALE.y);
         ImGui::Separator();
         ImGui::SetWindowFontScale(1.f);
     }
-    ImGui::SetNextWindowPos(ImVec2(WINDOW_POS.x + (90.f * SCALE.x), WINDOW_POS.y + (!trophy_id_selected.empty() || detail_np_com_id ? 16.0f : 58.f) * SCALE.y), ImGuiCond_Always);
+    ImGui::SetNextWindowPos(ImVec2(WINDOW_POS.x + (90.f * RES_SCALE.x), WINDOW_POS.y + (!trophy_id_selected.empty() || detail_np_com_id ? 16.0f : 58.f) * RES_SCALE.y), ImGuiCond_Always);
     ImGui::BeginChild("##trophy_collection_child", !trophy_id_selected.empty() || detail_np_com_id ? SIZE_INFO : SIZE_LIST, ImGuiChildFlags_None, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
 
     // Trophy Collection
     if (np_com_id_list.empty()) {
         ImGui::SetWindowFontScale(1.6f * RES_SCALE.x);
-        ImGui::SetCursorPosY(140.f * SCALE.y);
+        ImGui::SetCursorPosY(140.f * RES_SCALE.y);
         ImGui::TextWrapped("%s", lang["no_trophies"].c_str());
     } else {
         // Set Scroll Pos
@@ -492,15 +491,15 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
                 ImGui::Begin("##trophy_delete", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
                 ImGui::SetNextWindowBgAlpha(0.999f);
                 ImGui::SetNextWindowPos(ImVec2(WINDOW_POS.x + (WINDOW_SIZE.x / 2.f) - (POPUP_SIZE.x / 2.f), WINDOW_POS.y + (WINDOW_SIZE.y / 2.f) - (POPUP_SIZE.y / 2.f)), ImGuiCond_Always);
-                ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * SCALE.x);
+                ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * RES_SCALE.x);
                 ImGui::BeginChild("##trophy_delete_child", POPUP_SIZE, ImGuiChildFlags_Borders, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
-                ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * SCALE.x);
-                const ImVec2 ICON_POS(48.f * SCALE.x, 28.f * SCALE.y);
+                ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * RES_SCALE.x);
+                const ImVec2 ICON_POS(48.f * RES_SCALE.x, 28.f * RES_SCALE.y);
                 if (gui.trophy_np_com_id_list_icons[delete_np_com_id].contains("000")) {
                     ImGui::SetCursorPos(ICON_POS);
                     ImGui::Image(gui.trophy_np_com_id_list_icons[delete_np_com_id]["000"], SIZE_ICON_LIST);
                 }
-                const auto PADDING = (20.f * SCALE.x);
+                const auto PADDING = (20.f * RES_SCALE.x);
                 ImGui::SetWindowFontScale(1.5f * RES_SCALE.x);
                 const auto CALC_TITLE = ImGui::CalcTextSize(np_com_id_info[delete_np_com_id].name["000"].c_str(), nullptr, false, POPUP_SIZE.x - SIZE_ICON_LIST.x - ICON_POS.x - PADDING).y / 2.f;
                 ImGui::SetCursorPos(ImVec2(ICON_POS.x + SIZE_ICON_LIST.x + PADDING, ICON_POS.y + (SIZE_ICON_LIST.y / 2.f) - CALC_TITLE));
@@ -509,14 +508,14 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
                 ImGui::PopTextWrapPos();
                 ImGui::SetWindowFontScale(1.2f * RES_SCALE.x);
                 const auto delete_str = lang["trophy_deleted"].c_str();
-                ImGui::SetCursorPos(ImVec2(POPUP_SIZE.x / 2 - ImGui::CalcTextSize(delete_str, 0, false, POPUP_SIZE.x - (108.f * SCALE.x)).x / 2, (POPUP_SIZE.y / 2) + 10));
-                ImGui::PushTextWrapPos(POPUP_SIZE.x - (54.f * SCALE.x));
+                ImGui::SetCursorPos(ImVec2(POPUP_SIZE.x / 2 - ImGui::CalcTextSize(delete_str, 0, false, POPUP_SIZE.x - (108.f * RES_SCALE.x)).x / 2, (POPUP_SIZE.y / 2) + 10));
+                ImGui::PushTextWrapPos(POPUP_SIZE.x - (54.f * RES_SCALE.x));
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", delete_str);
                 ImGui::PopTextWrapPos();
-                ImGui::SetCursorPos(ImVec2((POPUP_SIZE.x / 2) - (BUTTON_SIZE.x + (20.f * SCALE.x)), POPUP_SIZE.y - BUTTON_SIZE.y - (22.0f * SCALE.y)));
+                ImGui::SetCursorPos(ImVec2((POPUP_SIZE.x / 2) - (BUTTON_SIZE.x + (20.f * RES_SCALE.x)), POPUP_SIZE.y - BUTTON_SIZE.y - (22.0f * RES_SCALE.y)));
                 if (ImGui::Button(common["cancel"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle)))
                     delete_np_com_id.clear();
-                ImGui::SameLine(0, 20.f * SCALE.x);
+                ImGui::SameLine(0, 20.f * RES_SCALE.x);
                 if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_cross))) {
                     fs::remove_all(TROPHY_PATH / "conf" / delete_np_com_id);
                     fs::remove_all(TROPHY_PATH / "data" / delete_np_com_id);
@@ -537,8 +536,8 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
 
             // Select Np Com ID
             ImGui::Columns(3, nullptr, false);
-            ImGui::SetColumnWidth(0, SIZE_ICON_LIST.x + (10.f * SCALE.x));
-            ImGui::SetColumnWidth(1, 405.f * SCALE.x);
+            ImGui::SetColumnWidth(0, SIZE_ICON_LIST.x + (10.f * RES_SCALE.x));
+            ImGui::SetColumnWidth(1, 405.f * RES_SCALE.x);
             for (const auto &np_com : np_com_id_list) {
                 ImGui::PushID(np_com.id.c_str());
                 if (!search_bar.PassFilter(np_com.name.c_str()))
@@ -567,13 +566,13 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
                     ImGui::EndPopup();
                 }
 
-                ImGui::SetCursorPosY(Title_POS + (50.f * SCALE.y));
+                ImGui::SetCursorPosY(Title_POS + (50.f * RES_SCALE.y));
                 ImGui::SetWindowFontScale(1.f * RES_SCALE.x);
                 ImGui::PushStyleColor(ImGuiCol_PlotHistogram, GUI_PROGRESS_BAR);
-                ImGui::ProgressBar(np_com.progress / 100.f, ImVec2(200 * SCALE.x, 15.f * SCALE.y), "");
+                ImGui::ProgressBar(np_com.progress / 100.f, ImVec2(200 * RES_SCALE.x, 15.f * RES_SCALE.y), "");
                 ImGui::PopStyleColor();
-                ImGui::SameLine(0.f, (10.f * SCALE.x));
-                ImGui::SetCursorPosY(ImGui::GetCursorPosY() - (6.f * SCALE.y));
+                ImGui::SameLine(0.f, (10.f * RES_SCALE.x));
+                ImGui::SetCursorPosY(ImGui::GetCursorPosY() - (6.f * RES_SCALE.y));
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", std::to_string(np_com.progress).append("%").c_str());
                 ImGui::NextColumn();
                 ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
@@ -598,11 +597,11 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
                 }
                 ImGui::PopStyleVar();
                 ImGui::Columns(4, nullptr, false);
-                ImGui::SetColumnWidth(0, 30.f * SCALE.x);
-                ImGui::SetColumnWidth(1, SIZE_ICON_LIST.x + (10.f * SCALE.x));
-                ImGui::SetColumnWidth(2, 375.f * SCALE.x);
+                ImGui::SetColumnWidth(0, 30.f * RES_SCALE.x);
+                ImGui::SetColumnWidth(1, SIZE_ICON_LIST.x + (10.f * RES_SCALE.x));
+                ImGui::SetColumnWidth(2, 375.f * RES_SCALE.x);
                 for (const auto &group_id : np_com_id_info[np_com_id_selected].group_id) {
-                    ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX() + (10.f * SCALE.x) - (ImGui::CalcTextSize("+").x / 2.f), ImGui::GetCursorPosY() + (SIZE_ICON_LIST.y / 2.f) - (ImGui::CalcTextSize("+").y / 2.f)));
+                    ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPosX() + (10.f * RES_SCALE.x) - (ImGui::CalcTextSize("+").x / 2.f), ImGui::GetCursorPosY() + (SIZE_ICON_LIST.y / 2.f) - (ImGui::CalcTextSize("+").y / 2.f)));
                     ImGui::TextColored(GUI_COLOR_TEXT, "%s", group_id != "000" ? "+" : "");
                     ImGui::NextColumn();
                     if (gui.trophy_np_com_id_list_icons[np_com_id_selected].contains(group_id))
@@ -619,19 +618,19 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
                     }
                     ImGui::PopID();
                     ImGui::PopStyleVar();
-                    ImGui::SetCursorPosY(Title_POS + (50.f * SCALE.y));
+                    ImGui::SetCursorPosY(Title_POS + (50.f * RES_SCALE.y));
                     ImGui::SetWindowFontScale(1.f * RES_SCALE.x);
                     ImGui::PushStyleColor(ImGuiCol_PlotHistogram, GUI_PROGRESS_BAR);
-                    ImGui::ProgressBar(np_com_id_info[np_com_id_selected].progress[group_id] / 100.f, ImVec2(200 * SCALE.x, 15.f * SCALE.y), "");
+                    ImGui::ProgressBar(np_com_id_info[np_com_id_selected].progress[group_id] / 100.f, ImVec2(200 * RES_SCALE.x, 15.f * RES_SCALE.y), "");
                     ImGui::PopStyleColor();
-                    ImGui::SameLine(0.f, (10.f * SCALE.x));
-                    ImGui::SetCursorPosY(ImGui::GetCursorPosY() - (6.f * SCALE.y));
+                    ImGui::SameLine(0.f, (10.f * RES_SCALE.x));
+                    ImGui::SetCursorPosY(ImGui::GetCursorPosY() - (6.f * RES_SCALE.y));
                     ImGui::TextColored(GUI_COLOR_TEXT, "%s", std::to_string(np_com_id_info[np_com_id_selected].progress[group_id]).append("%").c_str());
                     ImGui::NextColumn();
                     ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.f, 0.5f));
                     ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
                     ImGui::Selectable(np_com_id_info[np_com_id_selected].unlocked_type_count[group_id]["general"].c_str(), false, ImGuiSelectableFlags_SpanAllColumns, ImVec2(0, SIZE_ICON_LIST.y));
-                    ImGui::SameLine(0.f, 25.f * SCALE.x);
+                    ImGui::SameLine(0.f, 25.f * RES_SCALE.x);
                     ImGui::Selectable(">", false, ImGuiSelectableFlags_SpanAllColumns, ImVec2(0, SIZE_ICON_LIST.y));
                     ImGui::PopStyleVar();
                     ImGui::NextColumn();
@@ -646,22 +645,22 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
                 ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + SIZE_INFO.x - SIZE_ICON_LIST.x - 48.f);
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", np_com_id_info[np_com_id_selected].name[group_id_selected == "global" ? "000" : group_id_selected].c_str());
                 ImGui::PopTextWrapPos();
-                ImGui::SetCursorPosY(SIZE_ICON_LIST.y + (20.f * SCALE.y));
+                ImGui::SetCursorPosY(SIZE_ICON_LIST.y + (20.f * RES_SCALE.y));
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", lang["progress"].c_str());
-                ImGui::SameLine(260.f * SCALE.x);
+                ImGui::SameLine(260.f * RES_SCALE.x);
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", std::to_string(np_com_id_info[np_com_id_selected].progress[group_id_selected]).append("%").c_str());
-                ImGui::SameLine(360 * SCALE.x);
-                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (6.f * SCALE.y));
+                ImGui::SameLine(360 * RES_SCALE.x);
+                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (6.f * RES_SCALE.y));
                 ImGui::PushStyleColor(ImGuiCol_PlotHistogram, GUI_PROGRESS_BAR);
-                ImGui::ProgressBar(np_com_id_info[np_com_id_selected].progress[group_id_selected] / 100.f, ImVec2(200 * SCALE.x, 15.f * SCALE.y), "");
+                ImGui::ProgressBar(np_com_id_info[np_com_id_selected].progress[group_id_selected] / 100.f, ImVec2(200 * RES_SCALE.x, 15.f * RES_SCALE.y), "");
                 ImGui::PopStyleColor();
-                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (30.f * SCALE.y));
+                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (30.f * RES_SCALE.y));
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", lang["trophies"].c_str());
-                ImGui::SameLine(260.f * SCALE.x);
+                ImGui::SameLine(260.f * RES_SCALE.x);
                 ImGui::TextColored(GUI_COLOR_TEXT, "%d/%d\n%s", np_com_id_info[np_com_id_selected].unlocked_count[group_id_selected], np_com_id_info[np_com_id_selected].trophy_count_by_group[group_id_selected], np_com_id_info[np_com_id_selected].unlocked_type_count[group_id_selected]["detail"].c_str());
-                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (45.f * SCALE.y));
+                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (45.f * RES_SCALE.y));
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", lang["updated"].c_str());
-                ImGui::SameLine(260.f * SCALE.x);
+                ImGui::SameLine(260.f * RES_SCALE.x);
                 auto DATE_TIME = get_date_time(gui, emuenv, np_com_id_info[np_com_id_selected].updated);
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s %s", DATE_TIME[DateTime::DATE_MINI].c_str(), DATE_TIME[DateTime::CLOCK].c_str());
                 if (is_12_hour_format) {
@@ -669,9 +668,9 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
                     ImGui::TextColored(GUI_COLOR_TEXT, "%s", DATE_TIME[DateTime::DAY_MOMENT].c_str());
                 }
                 ImGui::PushTextWrapPos(SIZE_INFO.x - 40.f);
-                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (35.f * SCALE.y));
+                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (35.f * RES_SCALE.y));
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", lang["details"].c_str());
-                ImGui::SameLine(260.f * SCALE.x);
+                ImGui::SameLine(260.f * RES_SCALE.x);
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", np_com_id_info[np_com_id_selected].detail[group_id_selected == "global" ? "000" : group_id_selected].c_str());
                 ImGui::PopTextWrapPos();
                 // Select Trophy
@@ -685,9 +684,9 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
                     detail_np_com_id = true;
                 ImGui::PopStyleVar();
                 ImGui::Columns(4, nullptr, false);
-                ImGui::SetColumnWidth(0, 30.f * SCALE.x);
-                ImGui::SetColumnWidth(1, SIZE_TROPHY_LIST.x + (15.f * SCALE.x));
-                ImGui::SetColumnWidth(2, 40.f * SCALE.x);
+                ImGui::SetColumnWidth(0, 30.f * RES_SCALE.x);
+                ImGui::SetColumnWidth(1, SIZE_TROPHY_LIST.x + (15.f * RES_SCALE.x));
+                ImGui::SetColumnWidth(2, 40.f * RES_SCALE.x);
                 for (const auto &trophy : trophy_list) {
                     ImGui::NextColumn();
                     ImGui::SetWindowFontScale(1.2f * RES_SCALE.x);
@@ -705,7 +704,7 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
                     }
                     ImGui::NextColumn();
                     const auto hidden_trophy = (!trophy_info[trophy.id].earned && (trophy_info[trophy.id].hidden == "yes"));
-                    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (14.f * SCALE.y));
+                    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (14.f * RES_SCALE.y));
                     ImGui::TextColored(GUI_COLOR_TEXT, "%s", hidden_trophy && !show_hidden_trophy ? "?" : trophy_info[trophy.id].type["general"].c_str());
                     ImGui::NextColumn();
                     ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.f, 0.2f));
@@ -714,7 +713,7 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
                         trophy_id_selected = trophy.id;
                     ImGui::PopStyleVar();
                     if (!hidden_trophy || show_hidden_trophy) {
-                        ImGui::SetCursorPosY(name_pos + (40.f * SCALE.y));
+                        ImGui::SetCursorPosY(name_pos + (40.f * RES_SCALE.y));
                         ImGui::SetWindowFontScale(1.0f * RES_SCALE.x);
                         ImGui::Text("%s", trophy_info[trophy.id].detail.c_str());
                     }
@@ -727,23 +726,23 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
                 if (trophy_info[trophy_id_selected].earned)
                     ImGui::Image(gui.trophy_list[trophy_id_selected], SIZE_TROPHY_LIST);
                 else {
-                    ImGui::SetCursorPosY((SIZE_TROPHY_LIST.y / 2.f) - (15.f * SCALE.y));
+                    ImGui::SetCursorPosY((SIZE_TROPHY_LIST.y / 2.f) - (15.f * RES_SCALE.y));
                     ImGui::TextColored(GUI_COLOR_TEXT, "%s", lang["locked"].c_str());
                 }
                 const auto hidden_trophy = (!trophy_info[trophy_id_selected].earned && (trophy_info[trophy_id_selected].hidden == "yes"));
                 const auto selected_trophy_str = hidden_trophy && !show_hidden_trophy ? hidden_trophy_str : trophy_info[trophy_id_selected].name.c_str();
                 const auto CALC_NAME = ImGui::CalcTextSize(selected_trophy_str, nullptr, false, SIZE_INFO.x - SIZE_TROPHY_LIST.x - 48.f).y / 2.f;
                 ImGui::SetCursorPos(ImVec2(SIZE_TROPHY_LIST.x + 20.f, (SIZE_TROPHY_LIST.y / 2.f) - CALC_NAME));
-                ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + SIZE_INFO.x - SIZE_TROPHY_LIST.x - (48.f * SCALE.x));
+                ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + SIZE_INFO.x - SIZE_TROPHY_LIST.x - (48.f * RES_SCALE.x));
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", selected_trophy_str);
                 ImGui::PopTextWrapPos();
-                ImGui::SetCursorPosY(SIZE_TROPHY_LIST.y + (25.f * SCALE.y));
+                ImGui::SetCursorPosY(SIZE_TROPHY_LIST.y + (25.f * RES_SCALE.y));
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", lang["grade"].c_str());
-                ImGui::SameLine(250.f * SCALE.x);
+                ImGui::SameLine(250.f * RES_SCALE.x);
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", hidden_trophy && !show_hidden_trophy ? "?" : trophy_info[trophy_id_selected].type["detail"].c_str());
-                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (25.f * SCALE.y));
+                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (25.f * RES_SCALE.y));
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", lang["earned"].c_str());
-                ImGui::SameLine(250.f * SCALE.x);
+                ImGui::SameLine(250.f * RES_SCALE.x);
                 if (trophy_info[trophy_id_selected].earned) {
                     auto DATE_TIME = get_date_time(gui, emuenv, trophy_info[trophy_id_selected].unlocked_time);
                     ImGui::TextColored(GUI_COLOR_TEXT, "%s %s", DATE_TIME[DateTime::DATE_MINI].c_str(), DATE_TIME[DateTime::CLOCK].c_str());
@@ -753,9 +752,9 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
                     }
                 } else
                     ImGui::TextColored(GUI_COLOR_TEXT, "%s", lang["not_earned"].c_str());
-                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (25.f * SCALE.y));
+                ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (25.f * RES_SCALE.y));
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", lang["details"].c_str());
-                ImGui::SameLine(250.f * SCALE.x);
+                ImGui::SameLine(250.f * RES_SCALE.x);
                 ImGui::PushTextWrapPos(SIZE_INFO.x);
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", hidden_trophy && !show_hidden_trophy ? "-" : trophy_info[trophy_id_selected].detail.c_str());
                 ImGui::PopTextWrapPos();
@@ -764,12 +763,12 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
     }
     ImGui::EndChild();
 
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * SCALE.x);
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * RES_SCALE.x);
     ImGui::SetWindowFontScale(1.2f * RES_SCALE.x);
 
     // Back
-    ImGui::SetCursorPos(ImVec2(8.f * SCALE.x, WINDOW_SIZE.y - (52.f * SCALE.y)));
-    if (ImGui::Button("Back", ImVec2(64.f * SCALE.x, 40.f * SCALE.y)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle))) {
+    ImGui::SetCursorPos(ImVec2(8.f * RES_SCALE.x, WINDOW_SIZE.y - (52.f * RES_SCALE.y)));
+    if (ImGui::Button("Back", ImVec2(64.f * RES_SCALE.x, 40.f * RES_SCALE.y)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle))) {
         if (!np_com_id_selected.empty()) {
             if (detail_np_com_id) {
                 detail_np_com_id = false;
@@ -798,8 +797,8 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
 
     // Sort
     if (trophy_id_selected.empty() && !detail_np_com_id && (np_com_id_selected.empty() || !group_id_selected.empty())) {
-        ImGui::SetCursorPos(ImVec2(WINDOW_SIZE.x - (70.f * SCALE.x), WINDOW_SIZE.y - (52.f * SCALE.y)));
-        if (ImGui::Button("...", ImVec2(64.f * SCALE.x, 40.f * SCALE.y)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_triangle)))
+        ImGui::SetCursorPos(ImVec2(WINDOW_SIZE.x - (70.f * RES_SCALE.x), WINDOW_SIZE.y - (52.f * RES_SCALE.y)));
+        if (ImGui::Button("...", ImVec2(64.f * RES_SCALE.x, 40.f * RES_SCALE.y)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_triangle)))
             ImGui::OpenPopup("...");
         if (ImGui::BeginPopup("...", ImGuiWindowFlags_NoMove)) {
             ImGui::TextColored(GUI_COLOR_TEXT_TITLE, "%s", lang["sort"].c_str());

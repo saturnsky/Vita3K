@@ -27,8 +27,7 @@ namespace gui {
 void draw_license_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
     const auto display_size = ImGui::GetIO().DisplaySize;
     const auto RES_SCALE = ImVec2(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const auto SCALE = ImVec2(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
-    const auto BUTTON_SIZE = ImVec2(180.f * SCALE.x, 45.f * SCALE.y);
+    const auto BUTTON_SIZE = ImVec2(180.f * RES_SCALE.x, 45.f * RES_SCALE.y);
 
     auto &lang = gui.lang.install_dialog.license_install;
     auto &license = gui.lang.install_dialog.pkg_install;
@@ -54,9 +53,9 @@ void draw_license_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
     ImGui::Begin("##license_install", &gui.file_menu.license_install_dialog, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
     ImGui::SetNextWindowPos(ImVec2(display_size.x / 2.f, display_size.y / 2.f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
     ImGui::SetWindowFontScale(RES_SCALE.x);
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * SCALE.x);
-    ImGui::BeginChild("##license_install_child", ImVec2(616.f * SCALE.x, 264.f * SCALE.y), ImGuiChildFlags_Borders | ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
-    const auto POS_BUTTON = (ImGui::GetWindowWidth() / 2.f) - (BUTTON_SIZE.x / 2.f) + (10.f * SCALE.x);
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * RES_SCALE.x);
+    ImGui::BeginChild("##license_install_child", ImVec2(616.f * RES_SCALE.x, 264.f * RES_SCALE.y), ImGuiChildFlags_Borders | ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
+    const auto POS_BUTTON = (ImGui::GetWindowWidth() / 2.f) - (BUTTON_SIZE.x / 2.f) + (10.f * RES_SCALE.x);
     TextColoredCentered(GUI_COLOR_TEXT_TITLE, title.c_str());
     ImGui::Spacing();
     ImGui::Separator();
@@ -96,7 +95,7 @@ void draw_license_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
     }
     case State::ZRIF: {
         title = license["enter_zrif_key"];
-        ImGui::PushItemWidth(640.f * SCALE.x);
+        ImGui::PushItemWidth(640.f * RES_SCALE.x);
         ImGui::InputTextWithHint("##enter_zrif", license["input_zrif"].c_str(), &zRIF);
         ImGui::PopItemWidth();
         SetTooltipEx(license["copy_paste_zrif"].c_str());
@@ -108,7 +107,7 @@ void draw_license_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
             state = State::UNDEFINED;
             zRIF.clear();
         }
-        ImGui::SameLine(0, 20.f * SCALE.x);
+        ImGui::SameLine(0, 20.f * RES_SCALE.x);
         if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE) && !zRIF.empty()) {
             if (create_license(emuenv, zRIF))
                 state = State::SUCCESS;
@@ -126,7 +125,7 @@ void draw_license_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
         ImGui::Spacing();
         if (license_path != "")
             ImGui::Checkbox(license["delete_bin_rif"].c_str(), &delete_license_file);
-        ImGui::SetCursorPos(ImVec2(POS_BUTTON, ImGui::GetWindowSize().y - BUTTON_SIZE.y - (20.f * SCALE.y)));
+        ImGui::SetCursorPos(ImVec2(POS_BUTTON, ImGui::GetWindowSize().y - BUTTON_SIZE.y - (20.f * RES_SCALE.y)));
         if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE)) {
             if (delete_license_file) {
                 fs::remove(fs::path(license_path.native()));
@@ -142,7 +141,7 @@ void draw_license_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
         title = indicator["install_failed"];
         ImGui::SetCursorPosY(ImGui::GetWindowSize().y / 2.f - 20.f);
         TextColoredCentered(GUI_COLOR_TEXT, lang["failed_install_license"].c_str());
-        ImGui::SetCursorPos(ImVec2(POS_BUTTON, ImGui::GetWindowSize().y - BUTTON_SIZE.y - (20.f * SCALE.y)));
+        ImGui::SetCursorPos(ImVec2(POS_BUTTON, ImGui::GetWindowSize().y - BUTTON_SIZE.y - (20.f * RES_SCALE.y)));
         if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE)) {
             gui.file_menu.license_install_dialog = false;
             license_path = "";

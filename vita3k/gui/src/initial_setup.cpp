@@ -66,12 +66,11 @@ void draw_initial_setup(GuiState &gui, EmuEnvState &emuenv) {
 
     const auto display_size = ImGui::GetIO().DisplaySize;
     const auto RES_SCALE = ImVec2(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const auto SCALE = ImVec2(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
-    const auto WINDOW_SIZE = ImVec2(756.f * SCALE.x, 418.f * SCALE.y);
-    const auto SELECT_SIZE = 72.f * SCALE.y;
-    const auto BUTTON_SIZE = ImVec2(154.f * SCALE.x, 52.f * SCALE.y);
-    const auto BIG_BUTTON_SIZE = ImVec2(344.f * SCALE.x, 48.f * SCALE.y);
-    const auto BIG_BUTTON_POS = ImVec2((WINDOW_SIZE.x / 2.f) - (BIG_BUTTON_SIZE.x / 2.f), WINDOW_SIZE.y - BIG_BUTTON_SIZE.y - (20.f * SCALE.y));
+    const auto WINDOW_SIZE = ImVec2(756.f * RES_SCALE.x, 418.f * RES_SCALE.y);
+    const auto SELECT_SIZE = 72.f * RES_SCALE.y;
+    const auto BUTTON_SIZE = ImVec2(154.f * RES_SCALE.x, 52.f * RES_SCALE.y);
+    const auto BIG_BUTTON_SIZE = ImVec2(344.f * RES_SCALE.x, 48.f * RES_SCALE.y);
+    const auto BIG_BUTTON_POS = ImVec2((WINDOW_SIZE.x / 2.f) - (BIG_BUTTON_SIZE.x / 2.f), WINDOW_SIZE.y - BIG_BUTTON_SIZE.y - (20.f * RES_SCALE.y));
 
     auto &lang = gui.lang.initial_setup;
     auto &common = emuenv.common_dialog.lang.common;
@@ -89,10 +88,10 @@ void draw_initial_setup(GuiState &gui, EmuEnvState &emuenv) {
     ImGui::SetNextWindowSize(display_size, ImGuiCond_Always);
     ImGui::Begin("##initial_setup", &emuenv.cfg.initial_setup, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
     ImGui::GetBackgroundDrawList()->AddRectFilled(ImVec2(0.f, 0), display_size, IM_COL32(112.f, 124.f, 246.f, 255.f), 0.f, ImDrawFlags_RoundCornersAll);
-    ImGui::SetNextWindowPos(ImVec2(98.f * SCALE.x, 30 * SCALE.y), ImGuiCond_Always);
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 6.f * SCALE.x);
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.f * SCALE.x);
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 2.f * SCALE.x);
+    ImGui::SetNextWindowPos(ImVec2(98.f * RES_SCALE.x, 30 * RES_SCALE.y), ImGuiCond_Always);
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 6.f * RES_SCALE.x);
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 6.f * RES_SCALE.x);
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 2.f * RES_SCALE.x);
     ImGui::PushStyleColor(ImGuiCol_Border, GUI_COLOR_TEXT);
     ImGui::SetNextWindowBgAlpha(0.0f);
 
@@ -102,19 +101,19 @@ void draw_initial_setup(GuiState &gui, EmuEnvState &emuenv) {
     const auto SELECT_COLOR_HOVERED = ImVec4(0.23f, 0.68f, 0.99f, 0.80f);
     const auto SELECT_COLOR_ACTIVE = ImVec4(0.23f, 0.68f, 1.f, 1.f);
 
-    ImGui::SetCursorPosY((47 * SCALE.y) - (ImGui::GetFontSize() / 2.f));
+    ImGui::SetCursorPosY((47 * RES_SCALE.y) - (ImGui::GetFontSize() / 2.f));
     TextCentered(title_str.c_str());
-    ImGui::SetCursorPosY(94.f * SCALE.y);
+    ImGui::SetCursorPosY(94.f * RES_SCALE.y);
     ImGui::Separator();
     switch (setup) {
     case SELECT_LANGUAGE:
         title_str = lang["select_language"];
-        ImGui::SetNextWindowPos(ImVec2(198.f * SCALE.x, 126.f * SCALE.y), ImGuiCond_Always);
+        ImGui::SetNextWindowPos(ImVec2(198.f * RES_SCALE.x, 126.f * RES_SCALE.y), ImGuiCond_Always);
         ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.f);
-        ImGui::BeginChild("##lang_list", ImVec2(WINDOW_SIZE.x - (200.f * SCALE.x), WINDOW_SIZE.y - (108.f * SCALE.y)), ImGuiChildFlags_None, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings);
+        ImGui::BeginChild("##lang_list", ImVec2(WINDOW_SIZE.x - (200.f * RES_SCALE.x), WINDOW_SIZE.y - (108.f * RES_SCALE.y)), ImGuiChildFlags_None, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings);
         ImGui::Columns(3, nullptr, false);
-        ImGui::SetColumnWidth(0, 96.f * SCALE.x);
-        ImGui::SetColumnWidth(1, 30.f * SCALE.x);
+        ImGui::SetColumnWidth(0, 96.f * RES_SCALE.x);
+        ImGui::SetColumnWidth(1, 30.f * RES_SCALE.x);
         ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.f, 0.5f));
         ImGui::PushStyleColor(ImGuiCol_Header, SELECT_COLOR);
         ImGui::PushStyleColor(ImGuiCol_HeaderHovered, SELECT_COLOR_HOVERED);
@@ -146,7 +145,7 @@ void draw_initial_setup(GuiState &gui, EmuEnvState &emuenv) {
         TextColoredCentered(GUI_COLOR_TEXT_TITLE, lang["current_emu_path"].c_str());
         ImGui::Spacing();
         TextCentered(emuenv.cfg.pref_path.c_str(), 0);
-        ImGui::SetCursorPos(!is_default_path ? ImVec2((WINDOW_SIZE.x / 2.f) - BIG_BUTTON_SIZE.x - (20.f * SCALE.x), BIG_BUTTON_POS.y) : BIG_BUTTON_POS);
+        ImGui::SetCursorPos(!is_default_path ? ImVec2((WINDOW_SIZE.x / 2.f) - BIG_BUTTON_SIZE.x - (20.f * RES_SCALE.x), BIG_BUTTON_POS.y) : BIG_BUTTON_POS);
         if (ImGui::Button(lang["change_emu_path"].c_str(), BIG_BUTTON_SIZE)) {
             std::filesystem::path emulator_path = "";
             host::dialog::filesystem::Result result = host::dialog::filesystem::pick_folder(emulator_path);
@@ -159,7 +158,7 @@ void draw_initial_setup(GuiState &gui, EmuEnvState &emuenv) {
             }
         }
         if (!is_default_path) {
-            ImGui::SameLine(0, 40.f * SCALE.x);
+            ImGui::SameLine(0, 40.f * RES_SCALE.x);
             if (ImGui::Button(lang["reset_emu_path"].c_str(), BIG_BUTTON_SIZE)) {
                 if (emuenv.default_path != emuenv.pref_path) {
                     emuenv.pref_path = emuenv.default_path;
@@ -175,17 +174,17 @@ void draw_initial_setup(GuiState &gui, EmuEnvState &emuenv) {
         ImGui::Spacing();
         if (ImGui::Button("Download Preinst Firmware", BIG_BUTTON_SIZE))
             open_path("https://bit.ly/4hlePsX");
-        ImGui::SameLine(0, 20.f * SCALE.x);
+        ImGui::SameLine(0, 20.f * RES_SCALE.x);
         ImGui::Text("%s %s", lang["installed"].c_str(), FW_PREINST_INSTALLED ? "V" : "X");
         ImGui::Spacing();
         if (ImGui::Button(lang["download_firmware"].c_str(), BIG_BUTTON_SIZE))
             get_firmware_file(emuenv);
-        ImGui::SameLine(0, 20.f * SCALE.x);
+        ImGui::SameLine(0, 20.f * RES_SCALE.x);
         ImGui::Text("%s %s", lang["installed"].c_str(), FW_INSTALLED ? "V" : "X");
         ImGui::Spacing();
         if (ImGui::Button(lang["download_font_package"].c_str(), BIG_BUTTON_SIZE))
             open_path("https://bit.ly/48ouDaa");
-        ImGui::SameLine(0, 20.f * SCALE.x);
+        ImGui::SameLine(0, 20.f * RES_SCALE.x);
         ImGui::Text("%s %s", lang["installed"].c_str(), FW_FONT_INSTALLED ? "V" : "X");
         ImGui::SetCursorPos(BIG_BUTTON_POS);
         if (ImGui::Button(lang["install_firmware_file"].c_str(), BIG_BUTTON_SIZE))
@@ -227,10 +226,10 @@ void draw_initial_setup(GuiState &gui, EmuEnvState &emuenv) {
 
     // Draw Button
     ImGui::SetWindowFontScale(1.2f * RES_SCALE.x);
-    ImGui::SetCursorPos(ImVec2(10.f * SCALE.x, display_size.y - BUTTON_SIZE.y - (14.f * SCALE.y)));
+    ImGui::SetCursorPos(ImVec2(10.f * RES_SCALE.x, display_size.y - BUTTON_SIZE.y - (14.f * RES_SCALE.y)));
     if ((setup > SELECT_LANGUAGE) && ImGui::Button(lang["back"].c_str(), BUTTON_SIZE) || (setup > SELECT_LANGUAGE) && ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle)))
         setup = (InitialSetup)(setup - 1);
-    ImGui::SetCursorPos(ImVec2(display_size.x - BUTTON_SIZE.x - (14.f * SCALE.x), display_size.y - BUTTON_SIZE.y - (14.f * SCALE.y)));
+    ImGui::SetCursorPos(ImVec2(display_size.x - BUTTON_SIZE.x - (14.f * RES_SCALE.x), display_size.y - BUTTON_SIZE.y - (14.f * RES_SCALE.y)));
     if ((setup < FINISHED) && ImGui::Button(lang["next"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_cross)))
         setup = (InitialSetup)(setup + 1);
     ImGui::SetWindowFontScale(1.f);
