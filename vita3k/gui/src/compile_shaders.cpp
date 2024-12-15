@@ -29,9 +29,8 @@ static auto time = std::time(nullptr);
 void draw_pre_compiling_shaders_progress(GuiState &gui, EmuEnvState &emuenv, const uint32_t &total) {
     const auto display_size = ImGui::GetIO().DisplaySize;
     const auto RES_SCALE = ImVec2(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const auto SCALE = ImVec2(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
-    const auto WINDOW_SIZE = ImVec2(616.f * SCALE.x, 236.f * SCALE.y);
-    const auto ICON_SIZE_SCALE = ImVec2(96.f * SCALE.x, 96.f * SCALE.y);
+    const auto WINDOW_SIZE = ImVec2(616.f * RES_SCALE.x, 236.f * RES_SCALE.y);
+    const auto ICON_SIZE_SCALE = ImVec2(96.f * RES_SCALE.x, 96.f * RES_SCALE.y);
 
     ImGui::PushFont(gui.vita_font);
     ImGui::SetNextWindowPos(ImVec2(display_size.x / 2.f, display_size.y / 2.f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
@@ -43,7 +42,7 @@ void draw_pre_compiling_shaders_progress(GuiState &gui, EmuEnvState &emuenv, con
 
     // Check if icon exist
     if (gui.app_selector.user_apps_icon.contains(emuenv.io.app_path)) {
-        ImGui::SetCursorPos(ImVec2(54.f * SCALE.x, 32.f * SCALE.y));
+        ImGui::SetCursorPos(ImVec2(54.f * RES_SCALE.x, 32.f * RES_SCALE.y));
         ImGui::Image(get_app_icon(gui, emuenv.io.app_path)->second, ICON_SIZE_SCALE);
     }
 
@@ -52,11 +51,11 @@ void draw_pre_compiling_shaders_progress(GuiState &gui, EmuEnvState &emuenv, con
         pos = pos < (points.size() - 1) ? pos + 1 : 0;
         time = current_time;
     }
-    ImGui::SetCursorPos(ImVec2((176.f * SCALE.x), (52.f * SCALE.y)));
+    ImGui::SetCursorPos(ImVec2((176.f * RES_SCALE.x), (52.f * RES_SCALE.y)));
     ImGui::TextColored(GUI_COLOR_TEXT, "%s", emuenv.current_app_title.c_str());
-    ImGui::SetCursorPos(ImVec2((176.f * SCALE.x), ImGui::GetCursorPosY() + (30.f * SCALE.y)));
+    ImGui::SetCursorPos(ImVec2((176.f * RES_SCALE.x), ImGui::GetCursorPosY() + (30.f * RES_SCALE.y)));
     ImGui::TextColored(GUI_COLOR_TEXT, "%s%s", gui.lang.compile_shaders["compiling_shaders"].c_str(), points[pos].c_str());
-    const float PROGRESS_BAR_WIDTH = 508.f * SCALE.x;
+    const float PROGRESS_BAR_WIDTH = 508.f * RES_SCALE.x;
     ImGui::SetCursorPos(ImVec2((ImGui::GetWindowWidth() / 2) - (PROGRESS_BAR_WIDTH / 2.f), ImGui::GetCursorPosY() + 30.f * emuenv.dpi_scale));
     ImGui::PushStyleColor(ImGuiCol_PlotHistogram, GUI_PROGRESS_BAR);
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 12.f);

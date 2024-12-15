@@ -50,29 +50,28 @@ void draw_info_message(GuiState &gui, EmuEnvState &emuenv) {
     if (emuenv.io.title_id.empty() && emuenv.cfg.display_info_message) {
         const ImVec2 display_size(emuenv.logical_viewport_size.x, emuenv.logical_viewport_size.y);
         const ImVec2 RES_SCALE(emuenv.gui_scale.x, emuenv.gui_scale.y);
-        const ImVec2 SCALE(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
 
-        const ImVec2 WINDOW_SIZE(680.0f * SCALE.x, 320.0f * SCALE.y);
-        const ImVec2 BUTTON_SIZE(160.f * SCALE.x, 46.f * SCALE.y);
+        const ImVec2 WINDOW_SIZE(680.0f * RES_SCALE.x, 320.0f * RES_SCALE.y);
+        const ImVec2 BUTTON_SIZE(160.f * RES_SCALE.x, 46.f * RES_SCALE.y);
 
         ImGui::SetNextWindowPos(ImVec2(emuenv.logical_viewport_pos.x, emuenv.logical_viewport_pos.y), ImGuiCond_Always);
         ImGui::SetNextWindowSize(display_size, ImGuiCond_Always);
         ImGui::Begin("##information", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoDecoration);
         ImGui::SetNextWindowPos(ImVec2(emuenv.logical_viewport_pos.x + (display_size.x / 2) - (WINDOW_SIZE.x / 2.f), emuenv.logical_viewport_pos.y + (display_size.y / 2.f) - (WINDOW_SIZE.y / 2.f)), ImGuiCond_Always);
-        ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * SCALE.x);
+        ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * RES_SCALE.x);
         ImGui::BeginChild("##info", WINDOW_SIZE, ImGuiChildFlags_Borders, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoDecoration);
         const auto &title = gui.info_message.title;
         ImGui::SetWindowFontScale(RES_SCALE.x);
         TextColoredCentered(GUI_COLOR_TEXT_TITLE, title.c_str());
         ImGui::Spacing();
         ImGui::Separator();
-        const auto text_size = ImGui::CalcTextSize(gui.info_message.msg.c_str(), 0, false, WINDOW_SIZE.x - (24.f * SCALE.x));
-        const auto text_pos = ImVec2((WINDOW_SIZE.x / 2.f) - (text_size.x / 2.f), (WINDOW_SIZE.y / 2.f) - (text_size.y / 2.f) - (24 * SCALE.y));
+        const auto text_size = ImGui::CalcTextSize(gui.info_message.msg.c_str(), 0, false, WINDOW_SIZE.x - (24.f * RES_SCALE.x));
+        const auto text_pos = ImVec2((WINDOW_SIZE.x / 2.f) - (text_size.x / 2.f), (WINDOW_SIZE.y / 2.f) - (text_size.y / 2.f) - (24 * RES_SCALE.y));
         ImGui::SetCursorPos(text_pos);
         ImGui::TextWrapped("%s", gui.info_message.msg.c_str());
-        ImGui::SetCursorPosY(WINDOW_SIZE.y - BUTTON_SIZE.y - (42.0f * SCALE.y));
+        ImGui::SetCursorPosY(WINDOW_SIZE.y - BUTTON_SIZE.y - (42.0f * RES_SCALE.y));
         ImGui::Separator();
-        ImGui::SetCursorPos(ImVec2((ImGui::GetWindowWidth() / 2.f) - (BUTTON_SIZE.x / 2.f), WINDOW_SIZE.y - BUTTON_SIZE.y - (24.0f * SCALE.y)));
+        ImGui::SetCursorPos(ImVec2((ImGui::GetWindowWidth() / 2.f) - (BUTTON_SIZE.x / 2.f), WINDOW_SIZE.y - BUTTON_SIZE.y - (24.0f * RES_SCALE.y)));
         if (ImGui::Button(emuenv.common_dialog.lang.common["ok"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_cross)))
             gui.info_message = {};
         ImGui::EndChild();
@@ -262,8 +261,6 @@ static void init_font(GuiState &gui, EmuEnvState &emuenv) {
 
     // Build font atlas loaded and upload to GPU
     io.Fonts->Build();
-
-    io.DisplayFramebufferScale = { emuenv.dpi_scale, emuenv.dpi_scale };
 }
 
 vfs::FileBuffer init_default_icon(GuiState &gui, EmuEnvState &emuenv) {

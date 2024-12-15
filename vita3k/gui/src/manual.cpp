@@ -45,8 +45,7 @@ static float scroll = 0.f, max_scroll = 0.f;
 static auto hidden_button = false;
 
 void browse_pages_manual(GuiState &gui, EmuEnvState &emuenv, const uint32_t button) {
-    const auto RES_HEIGHT_SCALE = emuenv.logical_viewport_size.y / emuenv.res_height_dpi_scale;
-    const auto SCALE = RES_HEIGHT_SCALE * emuenv.dpi_scale;
+    const auto RES_HEIGHT_SCALE = emuenv.gui_scale.y;
 
     const auto manual_size = static_cast<int32_t>(gui.manuals.size() - 1);
 
@@ -60,10 +59,10 @@ void browse_pages_manual(GuiState &gui, EmuEnvState &emuenv, const uint32_t butt
         scroll = 0.f;
         break;
     case SCE_CTRL_UP:
-        scroll -= std::min(40.f * SCALE, scroll);
+        scroll -= std::min(40.f * RES_HEIGHT_SCALE, scroll);
         break;
     case SCE_CTRL_DOWN:
-        scroll += std::min(40.f * SCALE, max_scroll - scroll);
+        scroll += std::min(40.f * RES_HEIGHT_SCALE, max_scroll - scroll);
         break;
     case SCE_CTRL_TRIANGLE:
         hidden_button = !hidden_button;
