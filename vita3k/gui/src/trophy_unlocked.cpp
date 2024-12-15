@@ -30,14 +30,13 @@ static constexpr int TROPHY_WINDOW_STATIC_FRAME_COUNT = 250;
 static void draw_trophy_unlocked(GuiState &gui, EmuEnvState &emuenv, NpTrophyUnlockCallbackData &callback_data) {
     const auto display_size = ImGui::GetIO().DisplaySize;
     const auto RES_SCALE = ImVec2(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const auto SCALE = ImVec2(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
 
-    const auto TROPHY_WINDOW_MARGIN_PADDING = 12.f * SCALE.x;
-    const auto TROPHY_WINDOW_ICON_SIZE = 48.f * SCALE.x;
-    const auto TROPHY_ICON_MARGIN_PADDING = 6.f * SCALE.y;
-    const auto TROPHY_WINDOW_SIZE = ImVec2(400.f * SCALE.x, TROPHY_WINDOW_ICON_SIZE + TROPHY_WINDOW_MARGIN_PADDING);
-    const auto TROPHY_WINDOW_Y_POS = 20.f * SCALE.y;
-    const auto TROPHY_MOVE_DELTA = 12.f * SCALE.x;
+    const auto TROPHY_WINDOW_MARGIN_PADDING = 12.f * RES_SCALE.x;
+    const auto TROPHY_WINDOW_ICON_SIZE = 48.f * RES_SCALE.x;
+    const auto TROPHY_ICON_MARGIN_PADDING = 6.f * RES_SCALE.y;
+    const auto TROPHY_WINDOW_SIZE = ImVec2(400.f * RES_SCALE.x, TROPHY_WINDOW_ICON_SIZE + TROPHY_WINDOW_MARGIN_PADDING);
+    const auto TROPHY_WINDOW_Y_POS = 20.f * RES_SCALE.y;
+    const auto TROPHY_MOVE_DELTA = 12.f * RES_SCALE.x;
 
     if (gui.trophy_window_frame_stage == TrophyAnimationStage::SLIDE_IN
         || gui.trophy_window_frame_stage == TrophyAnimationStage::SLIDE_OUT) {

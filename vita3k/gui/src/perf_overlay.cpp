@@ -48,7 +48,6 @@ void draw_perf_overlay(GuiState &gui, EmuEnvState &emuenv) {
 
     const ImVec2 VIEWPORT_SIZE(emuenv.logical_viewport_size.x, emuenv.logical_viewport_size.y);
     const ImVec2 RES_SCALE(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const ImVec2 SCALE(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
 
     const auto SCALED_FONT_SIZE = ImGui::GetFontSize() * (0.7f * RES_SCALE.y);
     const auto FONT_SCALE = SCALED_FONT_SIZE / ImGui::GetFontSize();
@@ -70,7 +69,7 @@ void draw_perf_overlay(GuiState &gui, EmuEnvState &emuenv) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
     ImGui::Begin("##performance", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoBringToFrontOnFocus);
     ImGui::PushStyleColor(ImGuiCol_ChildBg, PERF_OVERLAY_BG_COLOR);
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f * SCALE.x);
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.f * RES_SCALE.x);
     ImGui::BeginChild("#perf_stats", WINDOW_SIZE, ImGuiChildFlags_Borders, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
 
     ImGui::SetWindowFontScale(0.7f * RES_SCALE.y);

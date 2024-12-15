@@ -752,14 +752,13 @@ void draw_touchpad_cursor(EmuEnvState &emuenv) {
     if (touchpad_fingers_pos.empty())
         return;
 
-    const ImVec2 RES_SCALE(emuenv.logical_viewport_size.x / emuenv.res_width_dpi_scale, emuenv.logical_viewport_size.y / emuenv.res_height_dpi_scale);
-    const ImVec2 SCALE(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
+    const ImVec2 RES_SCALE(emuenv.gui_scale.x, emuenv.gui_scale.y);
 
     const auto color = (port == SCE_TOUCH_PORT_FRONT) ? IM_COL32(0.f, 102.f, 204.f, 255.f) : IM_COL32(255.f, 0.f, 0.f, 255.f);
     for (const auto &pos : touchpad_fingers_pos) {
         auto x = emuenv.logical_viewport_pos.x + (pos.x * emuenv.logical_viewport_size.x);
         auto y = emuenv.logical_viewport_pos.y + (pos.y * emuenv.logical_viewport_size.y);
-        ImGui::GetForegroundDrawList()->AddCircle(ImVec2(x, y), 20.f * SCALE.x, color, 0, 4.f * SCALE.x);
+        ImGui::GetForegroundDrawList()->AddCircle(ImVec2(x, y), 20.f * RES_SCALE.x, color, 0, 4.f * RES_SCALE.x);
     }
 }
 

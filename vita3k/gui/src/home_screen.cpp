@@ -224,10 +224,9 @@ void close_and_run_new_app(GuiState &gui, EmuEnvState &emuenv, const std::string
 void draw_app_close(GuiState &gui, EmuEnvState &emuenv) {
     const ImVec2 display_size(emuenv.logical_viewport_size.x, emuenv.logical_viewport_size.y);
     const auto RES_SCALE = ImVec2(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const auto SCALE = ImVec2(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
 
-    const auto WINDOW_SIZE = ImVec2(756.0f * SCALE.x, 436.0f * SCALE.y);
-    const auto BUTTON_SIZE = ImVec2(320.f * SCALE.x, 46.f * SCALE.y);
+    const auto WINDOW_SIZE = ImVec2(756.0f * RES_SCALE.x, 436.0f * RES_SCALE.y);
+    const auto BUTTON_SIZE = ImVec2(320.f * RES_SCALE.x, 46.f * RES_SCALE.y);
 
     auto &common = emuenv.common_dialog.lang.common;
 
@@ -235,27 +234,27 @@ void draw_app_close(GuiState &gui, EmuEnvState &emuenv) {
     ImGui::SetNextWindowSize(display_size, ImGuiCond_Always);
     ImGui::Begin("##app_close", &gui.vita_area.app_close, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
     ImGui::SetNextWindowPos(ImVec2(emuenv.logical_viewport_pos.x + (display_size.x / 2.f) - (WINDOW_SIZE.x / 2.f), emuenv.logical_viewport_pos.y + (display_size.y / 2.f) - (WINDOW_SIZE.y / 2.f)), ImGuiCond_Always);
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * SCALE.x);
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * RES_SCALE.x);
     ImGui::BeginChild("##app_close_child", WINDOW_SIZE, ImGuiChildFlags_Borders, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * SCALE.x);
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * RES_SCALE.x);
 
-    const auto ICON_SIZE = ImVec2(64.f * SCALE.x, 64.f * SCALE.y);
+    const auto ICON_SIZE = ImVec2(64.f * RES_SCALE.x, 64.f * RES_SCALE.y);
 
     ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
-    ImGui::SetCursorPos(ImVec2(50.f * SCALE.x, 108.f * SCALE.y));
+    ImGui::SetCursorPos(ImVec2(50.f * RES_SCALE.x, 108.f * RES_SCALE.y));
     ImGui::TextColored(GUI_COLOR_TEXT, "%s", gui.lang.game_data["app_close"].c_str());
     if (gui.app_selector.user_apps_icon.contains(emuenv.io.app_path)) {
-        const auto ICON_POS_SCALE = ImVec2(50.f * SCALE.x, (WINDOW_SIZE.y / 2.f) - (ICON_SIZE.y / 2.f) - (10.f * SCALE.y));
+        const auto ICON_POS_SCALE = ImVec2(50.f * RES_SCALE.x, (WINDOW_SIZE.y / 2.f) - (ICON_SIZE.y / 2.f) - (10.f * RES_SCALE.y));
         ImGui::SetCursorPos(ICON_POS_SCALE);
         const auto POS_MIN = ImGui::GetCursorScreenPos();
         ImGui::GetWindowDrawList()->AddImageRounded(get_app_icon(gui, emuenv.io.app_path)->second, POS_MIN, ImVec2(POS_MIN.x + ICON_SIZE.x, POS_MIN.y + ICON_SIZE.y), ImVec2(0, 0), ImVec2(1, 1), IM_COL32_WHITE, ICON_SIZE.x, ImDrawFlags_RoundCornersAll);
     }
-    ImGui::SetCursorPos(ImVec2(ICON_SIZE.x + (72.f * SCALE.x), (WINDOW_SIZE.y / 2.f) - ImGui::CalcTextSize(emuenv.current_app_title.c_str()).y + (4.f * SCALE.y)));
+    ImGui::SetCursorPos(ImVec2(ICON_SIZE.x + (72.f * RES_SCALE.x), (WINDOW_SIZE.y / 2.f) - ImGui::CalcTextSize(emuenv.current_app_title.c_str()).y + (4.f * RES_SCALE.y)));
     ImGui::TextColored(GUI_COLOR_TEXT, "%s", emuenv.current_app_title.c_str());
-    ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2) - (BUTTON_SIZE.x + (20.f * SCALE.x)), WINDOW_SIZE.y - BUTTON_SIZE.y - (24.0f * SCALE.y)));
+    ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2) - (BUTTON_SIZE.x + (20.f * RES_SCALE.x)), WINDOW_SIZE.y - BUTTON_SIZE.y - (24.0f * RES_SCALE.y)));
     if (ImGui::Button(common["cancel"].c_str(), BUTTON_SIZE))
         gui.vita_area.app_close = false;
-    ImGui::SameLine(0, 20.f * SCALE.x);
+    ImGui::SameLine(0, 20.f * RES_SCALE.x);
     if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE)) {
         const auto &app_path = gui.vita_area.live_area_screen ? gui.live_area_current_open_apps_list[gui.live_area_app_current_open] : emuenv.app_path;
         close_and_run_new_app(gui, emuenv, app_path);

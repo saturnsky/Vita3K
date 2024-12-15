@@ -264,27 +264,26 @@ void draw_ime(Ime &ime, EmuEnvState &emuenv) {
     static float scroll_special_max;
     const auto display_size = ImGui::GetIO().DisplaySize;
     const auto RES_SCALE = ImVec2(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const auto SCALE = ImVec2(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
-    const auto WINDOW_POS = ImVec2(0.f, display_size.y - (248.f * SCALE.y));
-    const auto BUTTON_HEIGHT_SIZE = 52.f * SCALE.y;
-    const auto PUNCT_BUTTON_SIZE = ImVec2(56.f * SCALE.x, BUTTON_HEIGHT_SIZE);
-    const auto KEY_BUTTON_SIZE = ImVec2(size_key * SCALE.x, BUTTON_HEIGHT_SIZE);
-    const auto ENTER_BUTTON_SIZE = ImVec2(135.f * SCALE.x, BUTTON_HEIGHT_SIZE);
-    const auto BUTTON_SIZE = numeric_pad ? ENTER_BUTTON_SIZE : ImVec2(size_button * SCALE.x, BUTTON_HEIGHT_SIZE);
-    const auto SPACE = 6.f * SCALE.x;
-    const auto MARGE_BORDER = 13.f * SCALE.x;
-    const auto LAST_ROW_KEY_POS = 185.f * SCALE.y;
+    const auto WINDOW_POS = ImVec2(0.f, display_size.y - (248.f * RES_SCALE.y));
+    const auto BUTTON_HEIGHT_SIZE = 52.f * RES_SCALE.y;
+    const auto PUNCT_BUTTON_SIZE = ImVec2(56.f * RES_SCALE.x, BUTTON_HEIGHT_SIZE);
+    const auto KEY_BUTTON_SIZE = ImVec2(size_key * RES_SCALE.x, BUTTON_HEIGHT_SIZE);
+    const auto ENTER_BUTTON_SIZE = ImVec2(135.f * RES_SCALE.x, BUTTON_HEIGHT_SIZE);
+    const auto BUTTON_SIZE = numeric_pad ? ENTER_BUTTON_SIZE : ImVec2(size_button * RES_SCALE.x, BUTTON_HEIGHT_SIZE);
+    const auto SPACE = 6.f * RES_SCALE.x;
+    const auto MARGE_BORDER = 13.f * RES_SCALE.x;
+    const auto LAST_ROW_KEY_POS = 185.f * RES_SCALE.y;
     const auto BUTTON_POS_X = display_size.x - MARGE_BORDER - BUTTON_SIZE.x;
     const auto ENTER_BUTTON_POS_X = display_size.x - MARGE_BORDER - ENTER_BUTTON_SIZE.x;
-    const auto NUM_BUTTON_SIZE = ImVec2(74.f * SCALE.x, BUTTON_HEIGHT_SIZE);
+    const auto NUM_BUTTON_SIZE = ImVec2(74.f * RES_SCALE.x, BUTTON_HEIGHT_SIZE);
     const auto NUM_BUTTON_POS_X = BUTTON_POS_X - (3 * NUM_BUTTON_SIZE.x) - (SPACE * 3);
-    const auto SPACE_BUTTON_SIZE = ImVec2(numeric_pad ? 216.f * SCALE.x : 276.f * SCALE.x, KEY_BUTTON_SIZE.y);
+    const auto SPACE_BUTTON_SIZE = ImVec2(numeric_pad ? 216.f * RES_SCALE.x : 276.f * RES_SCALE.x, KEY_BUTTON_SIZE.y);
     const auto SPACE_BUTTON_POS = ImVec2(numeric_pad ? NUM_BUTTON_POS_X - SPACE - SPACE_BUTTON_SIZE.x : ENTER_BUTTON_POS_X - (PUNCT_BUTTON_SIZE.x * 3.f) - SPACE_BUTTON_SIZE.x - (SPACE * 4.f), LAST_ROW_KEY_POS);
     const auto is_shift = ime.caps_level != NO;
 
     ImGui::PushStyleColor(ImGuiCol_WindowBg, numeric_pad ? IME_NUMERIC_BG : GUI_SMOOTH_GRAY);
-    ImGui::SetNextWindowPos(ImVec2(0.f, display_size.y - (248.f * SCALE.y)), ImGuiCond_Always, ImVec2(0.f, 0.f));
-    ImGui::SetNextWindowSize(ImVec2(display_size.x, 248.f * SCALE.y));
+    ImGui::SetNextWindowPos(ImVec2(0.f, display_size.y - (248.f * RES_SCALE.y)), ImGuiCond_Always, ImVec2(0.f, 0.f));
+    ImGui::SetNextWindowSize(ImVec2(display_size.x, 248.f * RES_SCALE.y));
     ImGui::Begin("##ime", &ime.state, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * emuenv.dpi_scale);
     ImGui::PushStyleColor(ImGuiCol_Button, GUI_COLOR_TEXT);
@@ -292,9 +291,9 @@ void draw_ime(Ime &ime, EmuEnvState &emuenv) {
     ImGui::SetWindowFontScale(RES_SCALE.x);
     if (numeric_pad) {
         ImGui::SetCursorPosX(MARGE_BORDER);
-        ImGui::VSliderFloat("##scroll_special", ImVec2(42.f * SCALE.x, 140.f * SCALE.y), &scroll_special_current, scroll_special_max, 0, "");
-        ImGui::SetNextWindowPos(ImVec2(WINDOW_POS.x + (74.f * SCALE.x), WINDOW_POS.y));
-        ImGui::BeginChild("##special_key", ImVec2(488.f * SCALE.x, 178.f * SCALE.y), ImGuiChildFlags_None, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::VSliderFloat("##scroll_special", ImVec2(42.f * RES_SCALE.x, 140.f * RES_SCALE.y), &scroll_special_current, scroll_special_max, 0, "");
+        ImGui::SetNextWindowPos(ImVec2(WINDOW_POS.x + (74.f * RES_SCALE.x), WINDOW_POS.y));
+        ImGui::BeginChild("##special_key", ImVec2(488.f * RES_SCALE.x, 178.f * RES_SCALE.y), ImGuiChildFlags_None, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollWithMouse);
         const auto scroll_value = ImGui::GetIO().MouseWheel * 20.f;
         if (ImGui::GetIO().MouseWheel == 1)
             scroll_special_current -= std::min(scroll_value, scroll_special_current);
@@ -319,12 +318,12 @@ void draw_ime(Ime &ime, EmuEnvState &emuenv) {
         }
         ImGui::PopStyleColor(2);
         ImGui::EndChild();
-        ImGui::SetCursorPos(ImVec2(NUM_BUTTON_POS_X, key_row_pos[1] * SCALE.y));
+        ImGui::SetCursorPos(ImVec2(NUM_BUTTON_POS_X, key_row_pos[1] * RES_SCALE.y));
         for (const auto &numeric : pad_numeric_key) {
             for (uint32_t i = 0; i < numeric.second.size(); i++) {
                 if (!i)
-                    ImGui::SetCursorPos(ImVec2(NUM_BUTTON_POS_X, key_row_pos[numeric.first] * SCALE.y));
-                if (ImGui::Button(string_utils::utf16_to_utf8(numeric.second[i]).c_str(), ImVec2(i < 3 ? NUM_BUTTON_SIZE.x : 65.f * SCALE.x, NUM_BUTTON_SIZE.y)) && (ime.str.length() < ime.param.maxTextLength))
+                    ImGui::SetCursorPos(ImVec2(NUM_BUTTON_POS_X, key_row_pos[numeric.first] * RES_SCALE.y));
+                if (ImGui::Button(string_utils::utf16_to_utf8(numeric.second[i]).c_str(), ImVec2(i < 3 ? NUM_BUTTON_SIZE.x : 65.f * RES_SCALE.x, NUM_BUTTON_SIZE.y)) && (ime.str.length() < ime.param.maxTextLength))
                     update_key(ime, numeric.second[i]);
                 if (i != (numeric.second.size() - 1))
                     ImGui::SameLine(0, SPACE);
@@ -340,14 +339,14 @@ void draw_ime(Ime &ime, EmuEnvState &emuenv) {
         for (const auto &keyboard : is_shift ? shift_lang_key : lang_key) {
             for (uint32_t i = 0; i < keyboard.second.size(); i++) {
                 if (!i)
-                    ImGui::SetCursorPos(ImVec2(lang_keyboard_pos[keyboard.first] * SCALE.x, key_row_pos[keyboard.first] * SCALE.y));
+                    ImGui::SetCursorPos(ImVec2(lang_keyboard_pos[keyboard.first] * RES_SCALE.x, key_row_pos[keyboard.first] * RES_SCALE.y));
                 if (ImGui::Button(string_utils::utf16_to_utf8(keyboard.second[i]).c_str(), KEY_BUTTON_SIZE) && (ime.str.length() < ime.param.maxTextLength))
                     update_key(ime, keyboard.second[i]);
                 if (i != (keyboard.second.size() - 1))
                     ImGui::SameLine(0, SPACE);
             }
         }
-        ImGui::SetCursorPos(ImVec2(MARGE_BORDER, key_row_pos[3] * SCALE.y));
+        ImGui::SetCursorPos(ImVec2(MARGE_BORDER, key_row_pos[3] * RES_SCALE.y));
         ImGui::PushStyleColor(ImGuiCol_Button, IME_BUTTON_BG);
         ImGui::PushStyleColor(ImGuiCol_Text, GUI_COLOR_TEXT);
         if (ImGui::Button("Shift", BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_l2))) {
@@ -418,7 +417,7 @@ void draw_ime(Ime &ime, EmuEnvState &emuenv) {
         }
     }
     ImGui::PopStyleColor(2);
-    ImGui::SetCursorPos(ImVec2(BUTTON_POS_X, key_row_pos[3] * SCALE.y));
+    ImGui::SetCursorPos(ImVec2(BUTTON_POS_X, key_row_pos[3] * RES_SCALE.y));
     ImGui::PushStyleColor(ImGuiCol_Button, IME_BUTTON_BG);
     ImGui::PushStyleColor(ImGuiCol_Text, GUI_COLOR_TEXT);
     if ((ImGui::Button("Backspace", BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_square))) && ime.edit_text.caretIndex) {
@@ -438,7 +437,7 @@ void draw_ime(Ime &ime, EmuEnvState &emuenv) {
     ImGui::PopStyleColor(2);
     ImGui::PushStyleColor(ImGuiCol_Button, GUI_COLOR_TEXT_BLACK);
     ImGui::SetCursorPos(ImVec2(MARGE_BORDER, LAST_ROW_KEY_POS));
-    if (ImGui::Button("V", ImVec2(44.f * SCALE.x, KEY_BUTTON_SIZE.y)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle)))
+    if (ImGui::Button("V", ImVec2(44.f * RES_SCALE.x, KEY_BUTTON_SIZE.y)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle)))
         ime.event_id = SCE_IME_EVENT_PRESS_CLOSE;
     ImGui::PopStyleColor();
     ImGui::SameLine(0, 18.f);

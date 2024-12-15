@@ -240,18 +240,17 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
     const ImVec2 VIEWPORT_POS(emuenv.logical_viewport_pos.x, emuenv.logical_viewport_pos.y);
     const ImVec2 VIEWPORT_SIZE(emuenv.logical_viewport_size.x, emuenv.logical_viewport_size.y);
     const ImVec2 RES_SCALE(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const ImVec2 SCALE(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
 
-    const auto BUTTON_SIZE = ImVec2(310.f * SCALE.x, 46.f * SCALE.y);
-    const auto INFORMATION_BAR_HEIGHT = 32.f * SCALE.y;
+    const auto BUTTON_SIZE = ImVec2(310.f * RES_SCALE.x, 46.f * RES_SCALE.y);
+    const auto INFORMATION_BAR_HEIGHT = 32.f * RES_SCALE.y;
     const ImVec2 WINDOW_POS(VIEWPORT_POS.x, VIEWPORT_POS.y + INFORMATION_BAR_HEIGHT);
     const ImVec2 WINDOW_SIZE(VIEWPORT_SIZE.x, VIEWPORT_SIZE.y - INFORMATION_BAR_HEIGHT);
-    const auto SIZE_PREVIEW = ImVec2(360.f * SCALE.x, 204.f * SCALE.y);
-    const auto SIZE_MINI_PREVIEW = ImVec2(256.f * SCALE.x, 145.f * SCALE.y);
-    const auto SIZE_LIST = ImVec2(780 * SCALE.x, 414.f * SCALE.y);
-    const auto SIZE_PACKAGE = ImVec2(226.f * SCALE.x, 128.f * SCALE.y);
-    const auto SIZE_MINI_PACKAGE = ImVec2(170.f * SCALE.x, 96.f * SCALE.y);
-    const auto POPUP_SIZE = ImVec2(756.0f * SCALE.x, 436.0f * SCALE.y);
+    const auto SIZE_PREVIEW = ImVec2(360.f * RES_SCALE.x, 204.f * RES_SCALE.y);
+    const auto SIZE_MINI_PREVIEW = ImVec2(256.f * RES_SCALE.x, 145.f * RES_SCALE.y);
+    const auto SIZE_LIST = ImVec2(780 * RES_SCALE.x, 414.f * RES_SCALE.y);
+    const auto SIZE_PACKAGE = ImVec2(226.f * RES_SCALE.x, 128.f * RES_SCALE.y);
+    const auto SIZE_MINI_PACKAGE = ImVec2(170.f * RES_SCALE.x, 96.f * RES_SCALE.y);
+    const auto POPUP_SIZE = ImVec2(756.0f * RES_SCALE.x, 436.0f * RES_SCALE.y);
 
     const auto is_background = gui.apps_background.contains("NPXS10015");
     auto &common = emuenv.common_dialog.lang.common;
@@ -274,7 +273,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
     ImGui::SetWindowFontScale(1.6f * RES_SCALE.x);
     const auto title_size_str = ImGui::CalcTextSize(title.c_str(), 0, false, SIZE_LIST.x);
     ImGui::PushTextWrapPos(((WINDOW_SIZE.x - SIZE_LIST.x) / 2.f) + SIZE_LIST.x);
-    ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2.f) - (title_size_str.x / 2.f), (35.f * SCALE.y) - (title_size_str.y / 2.f)));
+    ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2.f) - (title_size_str.x / 2.f), (35.f * RES_SCALE.y) - (title_size_str.y / 2.f)));
     ImGui::TextColored(GUI_COLOR_TEXT, "%s", title.c_str());
     ImGui::PopTextWrapPos();
 
@@ -289,59 +288,59 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
         if ((menu == Menu::THEME) && selected.empty()) {
             ImGui::SetWindowFontScale(1.2f * RES_SCALE.x);
             const auto search_size = ImGui::CalcTextSize(common["search"].c_str());
-            ImGui::SetCursorPos(ImVec2(WINDOW_SIZE.x - (220.f * SCALE.x) - search_size.x, (35.f * SCALE.y) - (search_size.y / 2.f)));
+            ImGui::SetCursorPos(ImVec2(WINDOW_SIZE.x - (220.f * RES_SCALE.x) - search_size.x, (35.f * RES_SCALE.y) - (search_size.y / 2.f)));
             ImGui::TextColored(GUI_COLOR_TEXT, "%s", common["search"].c_str());
             ImGui::SameLine();
-            search_bar.Draw("##search_bar", 200 * SCALE.x);
+            search_bar.Draw("##search_bar", 200 * RES_SCALE.x);
             ImGui::SetWindowFontScale(1.6f * RES_SCALE.x);
 
             // Draw Scroll Arrow
-            const auto ARROW_SIZE = ImVec2(50.f * SCALE.x, 60.f * SCALE.y);
+            const auto ARROW_SIZE = ImVec2(50.f * RES_SCALE.x, 60.f * RES_SCALE.y);
             const ImU32 ARROW_COLOR = 0xFFFFFFFF; // White
 
             // Set arrow position of width
-            const auto ARROW_WIDTH_POS = VIEWPORT_SIZE.x - (45.f * SCALE.x);
+            const auto ARROW_WIDTH_POS = VIEWPORT_SIZE.x - (45.f * RES_SCALE.x);
             const auto ARROW_DRAW_WIDTH_POS = VIEWPORT_POS.x + ARROW_WIDTH_POS;
             const auto ARROW_SELECT_WIDTH_POS = ARROW_WIDTH_POS - (ARROW_SIZE.x / 2.f);
 
             if (current_scroll_pos != 0.f) {
-                const auto ARROW_UP_HEIGHT_POS = 135.f * SCALE.y;
+                const auto ARROW_UP_HEIGHT_POS = 135.f * RES_SCALE.y;
                 const ImVec2 ARROW_UPP_CENTER(ARROW_DRAW_WIDTH_POS, VIEWPORT_POS.y + ARROW_UP_HEIGHT_POS);
                 draw_list->AddTriangleFilled(
-                    ImVec2(ARROW_UPP_CENTER.x - (20.f * SCALE.x), ARROW_UPP_CENTER.y + (16.f * SCALE.y)),
-                    ImVec2(ARROW_UPP_CENTER.x, ARROW_UPP_CENTER.y - (16.f * SCALE.y)),
-                    ImVec2(ARROW_UPP_CENTER.x + (20.f * SCALE.x), ARROW_UPP_CENTER.y + (16.f * SCALE.y)), ARROW_COLOR);
+                    ImVec2(ARROW_UPP_CENTER.x - (20.f * RES_SCALE.x), ARROW_UPP_CENTER.y + (16.f * RES_SCALE.y)),
+                    ImVec2(ARROW_UPP_CENTER.x, ARROW_UPP_CENTER.y - (16.f * RES_SCALE.y)),
+                    ImVec2(ARROW_UPP_CENTER.x + (20.f * RES_SCALE.x), ARROW_UPP_CENTER.y + (16.f * RES_SCALE.y)), ARROW_COLOR);
                 ImGui::SetCursorPos(ImVec2(ARROW_SELECT_WIDTH_POS, ARROW_UP_HEIGHT_POS - ARROW_SIZE.y));
                 if ((ImGui::Selectable("##upp", false, ImGuiSelectableFlags_None, ARROW_SIZE))
                     || (!ImGui::GetIO().WantTextInput && ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_leftstick_up)))
                     || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_up)))
-                    set_scroll_pos = current_scroll_pos - (340 * SCALE.y);
+                    set_scroll_pos = current_scroll_pos - (340 * RES_SCALE.y);
             }
             if (current_scroll_pos < max_scroll_pos) {
-                const auto ARROW_DOWN_HEIGHT_POS = VIEWPORT_SIZE.y - (30.f * SCALE.y);
+                const auto ARROW_DOWN_HEIGHT_POS = VIEWPORT_SIZE.y - (30.f * RES_SCALE.y);
                 const ImVec2 ARROW_DOWN_CENTER(ARROW_DRAW_WIDTH_POS, VIEWPORT_POS.y + ARROW_DOWN_HEIGHT_POS);
                 draw_list->AddTriangleFilled(
-                    ImVec2(ARROW_DOWN_CENTER.x + (20.f * SCALE.x), ARROW_DOWN_CENTER.y - (16.f * SCALE.y)),
-                    ImVec2(ARROW_DOWN_CENTER.x, ARROW_DOWN_CENTER.y + (16.f * SCALE.y)),
-                    ImVec2(ARROW_DOWN_CENTER.x - (20.f * SCALE.x), ARROW_DOWN_CENTER.y - (16.f * SCALE.y)), ARROW_COLOR);
+                    ImVec2(ARROW_DOWN_CENTER.x + (20.f * RES_SCALE.x), ARROW_DOWN_CENTER.y - (16.f * RES_SCALE.y)),
+                    ImVec2(ARROW_DOWN_CENTER.x, ARROW_DOWN_CENTER.y + (16.f * RES_SCALE.y)),
+                    ImVec2(ARROW_DOWN_CENTER.x - (20.f * RES_SCALE.x), ARROW_DOWN_CENTER.y - (16.f * RES_SCALE.y)), ARROW_COLOR);
                 ImGui::SetCursorPos(ImVec2(ARROW_SELECT_WIDTH_POS, ARROW_DOWN_HEIGHT_POS - ARROW_SIZE.y));
                 if ((ImGui::Selectable("##down", false, ImGuiSelectableFlags_None, ARROW_SIZE))
                     || (!ImGui::GetIO().WantTextInput && ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_leftstick_down)))
                     || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_down)))
-                    set_scroll_pos = current_scroll_pos + (340 * SCALE.y);
+                    set_scroll_pos = current_scroll_pos + (340 * RES_SCALE.y);
             }
         }
     }
 
-    ImGui::SetCursorPosY(64.0f * SCALE.y);
+    ImGui::SetCursorPosY(64.0f * RES_SCALE.y);
     ImGui::Separator();
-    ImGui::SetNextWindowPos(ImVec2(WINDOW_POS.x + (WINDOW_SIZE.x / 2.f) - (SIZE_LIST.x / 2.f), WINDOW_POS.y + ((settings_menu == SettingsMenu::THEME_BACKGROUND) && menu != Menu::UNDEFINED ? 86.f : 64.f) * SCALE.y), ImGuiCond_Always);
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * SCALE.x);
+    ImGui::SetNextWindowPos(ImVec2(WINDOW_POS.x + (WINDOW_SIZE.x / 2.f) - (SIZE_LIST.x / 2.f), WINDOW_POS.y + ((settings_menu == SettingsMenu::THEME_BACKGROUND) && menu != Menu::UNDEFINED ? 86.f : 64.f) * RES_SCALE.y), ImGuiCond_Always);
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * RES_SCALE.x);
     ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.f);
     ImGui::BeginChild("##settings_child", SIZE_LIST, ImGuiChildFlags_None, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
 
-    const auto SIZE_SELECT = 80.f * SCALE.y;
-    const auto SIZE_PUPUP_SELECT = 70.f * SCALE.y;
+    const auto SIZE_SELECT = 80.f * RES_SCALE.y;
+    const auto SIZE_PUPUP_SELECT = 70.f * RES_SCALE.y;
 
     // Settings
     switch (settings_menu) {
@@ -371,24 +370,24 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
             ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.f, 0.5f));
             if (!themes_info.empty()) {
                 ImGui::SetWindowFontScale(0.74f);
-                const auto CALC_TITLE = ImGui::CalcTextSize(themes_info[gui.users[emuenv.io.user_id].theme_id].title.c_str(), 0, false, 230.f * SCALE.x).y;
-                const auto PAD_MARGIN = 40.f * SCALE.y;
+                const auto CALC_TITLE = ImGui::CalcTextSize(themes_info[gui.users[emuenv.io.user_id].theme_id].title.c_str(), 0, false, 230.f * RES_SCALE.x).y;
+                const auto PAD_MARGIN = 40.f * RES_SCALE.y;
                 const auto THEME_SELECT_SIZE = CALC_TITLE + PAD_MARGIN > SIZE_SELECT ? CALC_TITLE + PAD_MARGIN : SIZE_SELECT;
                 ImGui::SetWindowFontScale(1.2f);
                 if (ImGui::Selectable(theme_background.theme.main["title"].c_str(), false, ImGuiSelectableFlags_None, ImVec2(0.f, THEME_SELECT_SIZE)))
                     menu = Menu::THEME;
                 ImGui::SetWindowFontScale(0.74f);
-                ImGui::SameLine(0, 420.f * SCALE.x);
+                ImGui::SameLine(0, 420.f * RES_SCALE.x);
                 const auto CALC_POS_TITLE = (THEME_SELECT_SIZE / 2.f) - (CALC_TITLE / 2.f);
                 ImGui::SetCursorPosY(CALC_POS_TITLE);
                 ImGui::TextWrapped("%s", themes_info[gui.users[emuenv.io.user_id].theme_id].title.c_str());
                 ImGui::Separator();
             }
             ImGui::SetWindowFontScale(1.2f);
-            if (ImGui::Selectable(theme_background.start_screen["title"].c_str(), false, ImGuiSelectableFlags_None, ImVec2(0.f, 80.f * SCALE.y)))
+            if (ImGui::Selectable(theme_background.start_screen["title"].c_str(), false, ImGuiSelectableFlags_None, ImVec2(0.f, 80.f * RES_SCALE.y)))
                 menu = Menu::START;
             ImGui::Separator();
-            if (ImGui::Selectable(theme_background.home_screen_backgrounds["title"].c_str(), false, ImGuiSelectableFlags_None, ImVec2(0.f, 80.f * SCALE.y)))
+            if (ImGui::Selectable(theme_background.home_screen_backgrounds["title"].c_str(), false, ImGuiSelectableFlags_None, ImVec2(0.f, 80.f * RES_SCALE.y)))
                 menu = Menu::BACKGROUND;
             ImGui::PopStyleVar();
             ImGui::Separator();
@@ -454,11 +453,11 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                 switch (popup) {
                 case Popup::UNDEFINED: {
                     if (gui.themes_preview[selected].contains(HOME)) {
-                        ImGui::SetCursorPos(ImVec2(15.f * SCALE.x, (SIZE_LIST.y / 2.f) - (SIZE_PREVIEW.y / 2.f) - (72.f * SCALE.y)));
+                        ImGui::SetCursorPos(ImVec2(15.f * RES_SCALE.x, (SIZE_LIST.y / 2.f) - (SIZE_PREVIEW.y / 2.f) - (72.f * RES_SCALE.y)));
                         ImGui::Image(gui.themes_preview[selected][HOME], SIZE_PREVIEW);
                     }
                     if (gui.themes_preview[selected].contains(LOCK)) {
-                        ImGui::SetCursorPos(ImVec2((SIZE_LIST.x / 2.f) + (15.f * SCALE.y), (SIZE_LIST.y / 2.f) - (SIZE_PREVIEW.y / 2.f) - (72.f * SCALE.y)));
+                        ImGui::SetCursorPos(ImVec2((SIZE_LIST.x / 2.f) + (15.f * RES_SCALE.y), (SIZE_LIST.y / 2.f) - (SIZE_PREVIEW.y / 2.f) - (72.f * RES_SCALE.y)));
                         ImGui::Image(gui.themes_preview[selected][LOCK], SIZE_PREVIEW);
                     }
                     ImGui::SetWindowFontScale(1.2f);
@@ -483,21 +482,21 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                     ImGui::SetNextWindowSize(WINDOW_SIZE, ImGuiCond_Always);
                     ImGui::Begin("##delete_theme", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
                     ImGui::SetNextWindowPos(ImVec2(WINDOW_SIZE.x / 2.f, WINDOW_SIZE.y / 2.f), ImGuiCond_Always, ImVec2(0.5f, 0.5f));
-                    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * SCALE.x);
+                    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * RES_SCALE.x);
                     ImGui::BeginChild("##delete_theme_popup", POPUP_SIZE, ImGuiChildFlags_Borders, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
-                    ImGui::SetCursorPos(ImVec2(48.f * SCALE.x, 28.f * SCALE.y));
+                    ImGui::SetCursorPos(ImVec2(48.f * RES_SCALE.x, 28.f * RES_SCALE.y));
                     ImGui::SetWindowFontScale(1.6f * RES_SCALE.x);
                     ImGui::Image(gui.themes_preview[selected][PACKAGE], SIZE_MINI_PACKAGE);
-                    ImGui::SameLine(0, 22.f * SCALE.x);
-                    const auto CALC_TITLE = ImGui::CalcTextSize(themes_info[selected].title.c_str(), nullptr, false, POPUP_SIZE.x - SIZE_MINI_PACKAGE.x - (70.f * SCALE.x)).y / 2.f;
+                    ImGui::SameLine(0, 22.f * RES_SCALE.x);
+                    const auto CALC_TITLE = ImGui::CalcTextSize(themes_info[selected].title.c_str(), nullptr, false, POPUP_SIZE.x - SIZE_MINI_PACKAGE.x - (70.f * RES_SCALE.x)).y / 2.f;
                     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (SIZE_MINI_PACKAGE.y / 2.f) - CALC_TITLE);
                     ImGui::TextWrapped("%s", themes_info[selected].title.c_str());
                     ImGui::SetCursorPosY(POPUP_SIZE.y / 2.f);
                     TextColoredCentered(GUI_COLOR_TEXT, theme.main["delete"].c_str());
-                    ImGui::SetCursorPos(ImVec2((POPUP_SIZE.x / 2.f) - BUTTON_SIZE.x - (20.f * SCALE.x), POPUP_SIZE.y - BUTTON_SIZE.y - (22.f * SCALE.y)));
+                    ImGui::SetCursorPos(ImVec2((POPUP_SIZE.x / 2.f) - BUTTON_SIZE.x - (20.f * RES_SCALE.x), POPUP_SIZE.y - BUTTON_SIZE.y - (22.f * RES_SCALE.y)));
                     if (ImGui::Button(common["cancel"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle)))
                         popup = Popup::UNDEFINED;
-                    ImGui::SameLine(0, 40.f * SCALE.x);
+                    ImGui::SameLine(0, 40.f * RES_SCALE.x);
                     if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_cross))) {
                         if (selected == gui.users[emuenv.io.user_id].theme_id) {
                             gui.users[emuenv.io.user_id].theme_id = "default";
@@ -525,20 +524,20 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                 }
                 case Popup::INFORMATION: {
                     if (gui.themes_preview[selected].contains(HOME)) {
-                        ImGui::SetCursorPos(ImVec2(119.f * SCALE.x, 4.f * SCALE.y));
+                        ImGui::SetCursorPos(ImVec2(119.f * RES_SCALE.x, 4.f * RES_SCALE.y));
                         ImGui::Image(gui.themes_preview[selected][HOME], SIZE_MINI_PREVIEW);
                     }
                     if (gui.themes_preview[selected].contains(LOCK)) {
-                        ImGui::SetCursorPos(ImVec2(SIZE_LIST.x / 2.f + (15.f * SCALE.y), 4.f * SCALE.y));
+                        ImGui::SetCursorPos(ImVec2(SIZE_LIST.x / 2.f + (15.f * RES_SCALE.y), 4.f * RES_SCALE.y));
                         ImGui::Image(gui.themes_preview[selected][LOCK], SIZE_MINI_PREVIEW);
                     }
-                    const auto INFO_POS = ImVec2(280.f * SCALE.x, 30.f * SCALE.y);
+                    const auto INFO_POS = ImVec2(280.f * RES_SCALE.x, 30.f * RES_SCALE.y);
                     auto &info = theme.information;
                     ImGui::SetWindowFontScale(0.94f);
                     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + INFO_POS.y);
                     ImGui::TextColored(GUI_COLOR_TEXT, "%s", info["name"].c_str());
                     ImGui::SameLine();
-                    ImGui::PushTextWrapPos(SIZE_LIST.x - (30.f * SCALE.x));
+                    ImGui::PushTextWrapPos(SIZE_LIST.x - (30.f * RES_SCALE.x));
                     ImGui::SetCursorPosX(INFO_POS.x);
                     ImGui::TextColored(GUI_COLOR_TEXT, "%s", themes_info[selected].title.c_str());
                     ImGui::SetCursorPosY(ImGui::GetCursorPosY() + INFO_POS.y);
@@ -583,10 +582,10 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                 title = theme_background.start_screen["title"];
                 ImGui::SetWindowFontScale(0.72f);
                 ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));
-                const auto PACKAGE_POS_Y = (SIZE_LIST.y / 2.f) - (SIZE_PACKAGE.y / 2.f) - (72.f * SCALE.y);
+                const auto PACKAGE_POS_Y = (SIZE_LIST.y / 2.f) - (SIZE_PACKAGE.y / 2.f) - (72.f * RES_SCALE.y);
                 const auto is_not_default = gui.users[emuenv.io.user_id].theme_id != "default";
                 if (is_not_default) {
-                    const auto THEME_POS = ImVec2(15.f * SCALE.x, PACKAGE_POS_Y);
+                    const auto THEME_POS = ImVec2(15.f * RES_SCALE.x, PACKAGE_POS_Y);
                     if (gui.themes_preview[gui.users[emuenv.io.user_id].theme_id].contains(PACKAGE)) {
                         ImGui::SetCursorPos(THEME_POS);
                         ImGui::Image(gui.themes_preview[gui.users[emuenv.io.user_id].theme_id][PACKAGE], SIZE_PACKAGE);
@@ -598,12 +597,12 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                         sub_menu = SubMenu::THEME;
                     ImGui::PopStyleColor();
                     ImGui::SetWindowFontScale(0.72f);
-                    ImGui::SetCursorPosX(15.f * SCALE.x);
+                    ImGui::SetCursorPosX(15.f * RES_SCALE.x);
                     ImGui::PushTextWrapPos(ImGui::GetCursorPosX() + SIZE_PACKAGE.x);
                     ImGui::TextColored(GUI_COLOR_TEXT, "%s", themes_info[gui.users[emuenv.io.user_id].theme_id].title.c_str());
                     ImGui::PopTextWrapPos();
                 }
-                const auto IMAGE_POS = ImVec2(is_not_default ? (SIZE_LIST.x / 2.f) - (SIZE_PACKAGE.x / 2.f) : 15.f * SCALE.x, PACKAGE_POS_Y);
+                const auto IMAGE_POS = ImVec2(is_not_default ? (SIZE_LIST.x / 2.f) - (SIZE_PACKAGE.x / 2.f) : 15.f * RES_SCALE.x, PACKAGE_POS_Y);
                 if ((gui.users[emuenv.io.user_id].start_type == "image") && gui.start_background) {
                     ImGui::SetCursorPos(IMAGE_POS);
                     ImGui::Image(gui.start_background, SIZE_PACKAGE);
@@ -618,7 +617,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                 ImGui::SetWindowFontScale(0.72f);
                 ImGui::SetCursorPosX(IMAGE_POS.x);
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", theme_background.start_screen["image"].c_str());
-                const auto DEFAULT_POS = ImVec2(is_not_default ? (SIZE_LIST.x / 2.f) + (SIZE_PACKAGE.x / 2.f) + (30.f * SCALE.y) : (SIZE_LIST.x / 2.f) - (SIZE_PACKAGE.x / 2.f), PACKAGE_POS_Y);
+                const auto DEFAULT_POS = ImVec2(is_not_default ? (SIZE_LIST.x / 2.f) + (SIZE_PACKAGE.x / 2.f) + (30.f * RES_SCALE.y) : (SIZE_LIST.x / 2.f) - (SIZE_PACKAGE.x / 2.f), PACKAGE_POS_Y);
                 if (gui.themes_preview["default"].contains(PACKAGE)) {
                     ImGui::SetCursorPos(DEFAULT_POS);
                     ImGui::Image(gui.themes_preview["default"][PACKAGE], SIZE_PACKAGE);
@@ -635,7 +634,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                 ImGui::PopStyleVar();
                 ImGui::SetWindowFontScale(0.90f);
             } else {
-                const auto START_PREVIEW_POS = ImVec2((SIZE_LIST.x / 2.f) - (SIZE_PREVIEW.x / 2.f), (SIZE_LIST.y / 2.f) - (SIZE_PREVIEW.y / 2.f) - (72.f * SCALE.y));
+                const auto START_PREVIEW_POS = ImVec2((SIZE_LIST.x / 2.f) - (SIZE_PREVIEW.x / 2.f), (SIZE_LIST.y / 2.f) - (SIZE_PREVIEW.y / 2.f) - (72.f * RES_SCALE.y));
                 const auto SELECT_BUTTON_POS = ImVec2((SIZE_LIST.x / 2.f) - (BUTTON_SIZE.x / 2.f), (SIZE_LIST.y - 82.f) - BUTTON_SIZE.y);
                 if (sub_menu == SubMenu::THEME) {
                     title = themes_info[gui.users[emuenv.io.user_id].theme_id].title;
@@ -703,8 +702,8 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
             ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 1.0f));
             for (const auto &background : gui.users[emuenv.io.user_id].backgrounds) {
                 const auto IMAGE_POS = ImGui::GetCursorPos();
-                const auto PREVIEW_POS = ImVec2(IMAGE_POS.x + (gui.user_backgrounds_infos[background].prev_pos.x * SCALE.x), IMAGE_POS.y + (gui.user_backgrounds_infos[background].prev_pos.y * SCALE.y));
-                const auto PREVIEW_SIZE = ImVec2(gui.user_backgrounds_infos[background].prev_size.x * SCALE.x, gui.user_backgrounds_infos[background].prev_size.y * SCALE.y);
+                const auto PREVIEW_POS = ImVec2(IMAGE_POS.x + (gui.user_backgrounds_infos[background].prev_pos.x * RES_SCALE.x), IMAGE_POS.y + (gui.user_backgrounds_infos[background].prev_pos.y * RES_SCALE.y));
+                const auto PREVIEW_SIZE = ImVec2(gui.user_backgrounds_infos[background].prev_size.x * RES_SCALE.x, gui.user_backgrounds_infos[background].prev_size.y * RES_SCALE.y);
                 ImGui::SetCursorPos(PREVIEW_POS);
                 ImGui::Image(gui.user_backgrounds[background], PREVIEW_SIZE);
                 ImGui::SetCursorPosY(IMAGE_POS.y);
@@ -759,7 +758,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
         ImGui::Separator();
         ImGui::PopStyleVar();
         if (menu != Menu::UNDEFINED) {
-            const auto TIME_SELECT_SIZE = 336.f * SCALE.x;
+            const auto TIME_SELECT_SIZE = 336.f * RES_SCALE.x;
             ImGui::SetNextWindowPos(ImVec2(WINDOW_POS.x + WINDOW_SIZE.x - TIME_SELECT_SIZE, WINDOW_POS.y), ImGuiCond_Always, ImVec2(0.f, 0.f));
             ImGui::SetNextWindowSize(ImVec2(TIME_SELECT_SIZE, WINDOW_SIZE.y), ImGuiCond_Always);
             ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
@@ -767,7 +766,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
             ImGui::Begin("##time", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
             ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.f, 0.5f));
             ImGui::Columns(2, nullptr, false);
-            ImGui::SetColumnWidth(0, 30.f * SCALE.x);
+            ImGui::SetColumnWidth(0, 30.f * RES_SCALE.x);
             ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
             if (menu == Menu::DATE_FORMAT) {
                 const auto get_date_format_sting = [&](SceSystemParamDateFormat date_format) {
@@ -881,7 +880,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                 ImGui::Begin("##system_language", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoSavedSettings);
                 ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.f, 0.5f));
                 ImGui::Columns(2, nullptr, false);
-                ImGui::SetColumnWidth(0, 30.f * SCALE.x);
+                ImGui::SetColumnWidth(0, 30.f * RES_SCALE.x);
                 ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
                 for (const auto &sys_lang : LIST_SYS_LANG) {
                     ImGui::PushID(sys_lang.first);
@@ -975,7 +974,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                     title = get_ime_lang_index(emuenv.ime, lang_select)->second;
                     ImGui::SetWindowFontScale(1.2f);
                     ImGui::Columns(2, nullptr, false);
-                    ImGui::SetColumnWidth(0, 650.f * SCALE.x);
+                    ImGui::SetColumnWidth(0, 650.f * RES_SCALE.x);
                     ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.f, 0.5f));
                     ImGui::Selectable(title.c_str(), false, ImGuiSelectableFlags_None, ImVec2(0.f, SIZE_SELECT));
                     ImGui::PopStyleVar();
@@ -983,7 +982,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                     auto ime_lang_cfg_index = std::find(emuenv.cfg.ime_langs.begin(), emuenv.cfg.ime_langs.end(), lang_select);
                     auto is_ime_lang_enable = ime_lang_cfg_index != emuenv.cfg.ime_langs.end();
                     ImGui::SetWindowFontScale(1.4f);
-                    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (16.f * SCALE.y));
+                    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (16.f * RES_SCALE.y));
                     if (ImGui::Checkbox("##lang", &is_ime_lang_enable)) {
                         if (ime_lang_cfg_index != emuenv.cfg.ime_langs.end()) {
                             emuenv.cfg.ime_langs.erase(ime_lang_cfg_index);
@@ -1020,8 +1019,8 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
 
     // Back
     ImGui::SetWindowFontScale(1.2f * RES_SCALE.x);
-    ImGui::SetCursorPos(ImVec2(6.f * SCALE.x, WINDOW_SIZE.y - (52.f * SCALE.y)));
-    if (ImGui::Button("Back", ImVec2(64.f * SCALE.x, 40.f * SCALE.y)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle))) {
+    ImGui::SetCursorPos(ImVec2(6.f * RES_SCALE.x, WINDOW_SIZE.y - (52.f * RES_SCALE.y)));
+    if (ImGui::Button("Back", ImVec2(64.f * RES_SCALE.x, 40.f * RES_SCALE.y)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle))) {
         if (settings_menu != SettingsMenu::SELECT) {
             if (menu != Menu::UNDEFINED) {
                 if (!selected.empty()) {
@@ -1045,8 +1044,8 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
     }
 
     if ((settings_menu == SettingsMenu::THEME_BACKGROUND) && !selected.empty() && (selected != "default")) {
-        ImGui::SetCursorPos(ImVec2(WINDOW_SIZE.x - (70.f * SCALE.x), WINDOW_SIZE.y - (52.f * SCALE.y)));
-        if (((popup != Popup::INFORMATION) && ImGui::Button("...", ImVec2(64.f * SCALE.x, 40.f * SCALE.y))) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_triangle)))
+        ImGui::SetCursorPos(ImVec2(WINDOW_SIZE.x - (70.f * RES_SCALE.x), WINDOW_SIZE.y - (52.f * RES_SCALE.y)));
+        if (((popup != Popup::INFORMATION) && ImGui::Button("...", ImVec2(64.f * RES_SCALE.x, 40.f * RES_SCALE.y))) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_triangle)))
             ImGui::OpenPopup("...");
         if (ImGui::BeginPopup("...")) {
             if (ImGui::MenuItem(theme.information["title"].c_str()))
