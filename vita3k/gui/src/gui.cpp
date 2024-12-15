@@ -265,8 +265,6 @@ static void init_font(GuiState &gui, EmuEnvState &emuenv) {
     // Build font atlas loaded and upload to GPU
     io.Fonts->Build();
 
-    // DPI scaling
-    io.FontGlobalScale = emuenv.dpi_scale;
     io.DisplayFramebufferScale = { emuenv.dpi_scale, emuenv.dpi_scale };
 }
 
