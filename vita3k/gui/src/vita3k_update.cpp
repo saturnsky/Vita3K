@@ -248,10 +248,9 @@ static std::string get_remaining_str(LangState &lang, const uint64_t remaining) 
 void draw_vita3k_update(GuiState &gui, EmuEnvState &emuenv) {
     const ImVec2 display_size(emuenv.logical_viewport_size.x, emuenv.logical_viewport_size.y);
     const auto RES_SCALE = ImVec2(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const auto SCALE = ImVec2(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
     const ImVec2 WINDOW_POS(emuenv.logical_viewport_pos.x, emuenv.logical_viewport_pos.y);
 
-    const auto BUTTON_SIZE = ImVec2(150.f * SCALE.x, 46.f * SCALE.y);
+    const auto BUTTON_SIZE = ImVec2(150.f * RES_SCALE.x, 46.f * RES_SCALE.y);
     const auto is_background = gui.apps_background.contains("NPXS10015");
 
     auto &common = emuenv.common_dialog.lang.common;
@@ -267,11 +266,11 @@ void draw_vita3k_update(GuiState &gui, EmuEnvState &emuenv) {
         ImGui::GetBackgroundDrawList()->AddRectFilled(WINDOW_POS, display_size, IM_COL32(36.f, 120.f, 12.f, 255.f), 0.f, ImDrawFlags_RoundCornersAll);
 
     ImGui::SetWindowFontScale(1.6f * RES_SCALE.x);
-    ImGui::SetCursorPosY(44.f * SCALE.y);
+    ImGui::SetCursorPosY(44.f * RES_SCALE.y);
     TextCentered(lang["title"].c_str());
-    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (6.f * SCALE.y));
+    ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (6.f * RES_SCALE.y));
     ImGui::Separator();
-    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * SCALE.x);
+    ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * RES_SCALE.x);
     ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
     switch (state) {
     case NOT_COMPLETE_UPDATE:
@@ -286,7 +285,7 @@ void draw_vita3k_update(GuiState &gui, EmuEnvState &emuenv) {
     case HAS_UPDATE: {
         ImGui::SetCursorPosY((display_size.y / 2.f) - ImGui::GetFontSize());
         TextCentered(lang["new_version_available"].c_str());
-        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (40.f * SCALE.x));
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (40.f * RES_SCALE.x));
         TextCentered(fmt::format(fmt::runtime(lang["version"]), git_version).c_str());
         break;
     }
@@ -295,15 +294,15 @@ void draw_vita3k_update(GuiState &gui, EmuEnvState &emuenv) {
         ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
         TextCentered(fmt::format(fmt::runtime(lang["new_features"]), git_version).c_str());
         ImGui::Spacing();
-        ImGui::SetNextWindowPos(ImVec2(display_size.x / 2.f, 136.0f * SCALE.y), ImGuiCond_Always, ImVec2(0.5f, 0.f));
-        ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * SCALE.x);
-        ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 4.f * SCALE.x);
-        ImGui::PushStyleVar(ImGuiStyleVar_ScrollbarSize, 15.f * SCALE.x);
+        ImGui::SetNextWindowPos(ImVec2(display_size.x / 2.f, 136.0f * RES_SCALE.y), ImGuiCond_Always, ImVec2(0.5f, 0.f));
+        ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * RES_SCALE.x);
+        ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 4.f * RES_SCALE.x);
+        ImGui::PushStyleVar(ImGuiStyleVar_ScrollbarSize, 15.f * RES_SCALE.x);
         ImGui::SetNextWindowBgAlpha(0.f);
-        ImGui::BeginChild("##description_child", ImVec2(860 * SCALE.x, 334.f * SCALE.y), ImGuiChildFlags_Borders, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
+        ImGui::BeginChild("##description_child", ImVec2(860 * RES_SCALE.x, 334.f * RES_SCALE.y), ImGuiChildFlags_Borders, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
         ImGui::SetWindowFontScale(0.8f);
         ImGui::Columns(2, "commit_columns", true);
-        ImGui::SetColumnWidth(0, 200 * SCALE.x);
+        ImGui::SetColumnWidth(0, 200 * RES_SCALE.x);
         const auto space_margin = ImGui::GetStyle().ItemSpacing.x * 2.f;
         ImGui::TextColored(GUI_COLOR_TEXT_TITLE, "%s", lang["authors"].c_str());
         ImGui::NextColumn();
@@ -342,18 +341,18 @@ void draw_vita3k_update(GuiState &gui, EmuEnvState &emuenv) {
         break;
     case DOWNLOAD: {
         ImGui::SetWindowFontScale(1.25f * RES_SCALE.x);
-        ImGui::SetCursorPos(ImVec2(102.f * SCALE.x, ImGui::GetCursorPosY() + (44 * SCALE.y)));
-        ImGui::PushTextWrapPos(WINDOW_POS.x + (858.f * SCALE.x));
+        ImGui::SetCursorPos(ImVec2(102.f * RES_SCALE.x, ImGui::GetCursorPosY() + (44 * RES_SCALE.y)));
+        ImGui::PushTextWrapPos(WINDOW_POS.x + (858.f * RES_SCALE.x));
         ImGui::Text("%s", lang["downloading"].c_str());
         ImGui::PopTextWrapPos();
         ImGui::SetWindowFontScale(1.04f * RES_SCALE.x);
         const auto remaining_str = get_remaining_str(gui.lang, remaining);
-        ImGui::SetCursorPos(ImVec2(display_size.x - (90 * SCALE.x) - (ImGui::CalcTextSize(remaining_str.c_str()).x), display_size.y - (196.f * SCALE.y) - ImGui::GetFontSize()));
+        ImGui::SetCursorPos(ImVec2(display_size.x - (90 * RES_SCALE.x) - (ImGui::CalcTextSize(remaining_str.c_str()).x), display_size.y - (196.f * RES_SCALE.y) - ImGui::GetFontSize()));
         ImGui::Text("%s", remaining_str.c_str());
-        const float PROGRESS_BAR_WIDTH = 780.f * SCALE.x;
-        ImGui::SetCursorPos(ImVec2((ImGui::GetWindowWidth() / 2) - (PROGRESS_BAR_WIDTH / 2.f), display_size.y - (186.f * SCALE.y)));
+        const float PROGRESS_BAR_WIDTH = 780.f * RES_SCALE.x;
+        ImGui::SetCursorPos(ImVec2((ImGui::GetWindowWidth() / 2) - (PROGRESS_BAR_WIDTH / 2.f), display_size.y - (186.f * RES_SCALE.y)));
         ImGui::PushStyleColor(ImGuiCol_PlotHistogram, GUI_PROGRESS_BAR);
-        ImGui::ProgressBar(progress / 100.f, ImVec2(PROGRESS_BAR_WIDTH, 15.f * SCALE.y), "");
+        ImGui::ProgressBar(progress / 100.f, ImVec2(PROGRESS_BAR_WIDTH, 15.f * RES_SCALE.y), "");
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 16.f * emuenv.dpi_scale);
         TextColoredCentered(GUI_COLOR_TEXT, std::to_string(uint32_t(progress)).append("%").c_str());
         ImGui::PopStyleColor();
@@ -365,9 +364,9 @@ void draw_vita3k_update(GuiState &gui, EmuEnvState &emuenv) {
     }
 
     ImGui::SetWindowFontScale(1.2f * RES_SCALE.x);
-    ImGui::SetCursorPosY(display_size.y - BUTTON_SIZE.y - (20.f * SCALE.y));
+    ImGui::SetCursorPosY(display_size.y - BUTTON_SIZE.y - (20.f * RES_SCALE.y));
     ImGui::Separator();
-    ImGui::SetCursorPos(ImVec2(WINDOW_POS.x + (10.f * SCALE.x), (display_size.y - BUTTON_SIZE.y - (12.f * SCALE.y))));
+    ImGui::SetCursorPos(ImVec2(WINDOW_POS.x + (10.f * RES_SCALE.x), (display_size.y - BUTTON_SIZE.y - (12.f * RES_SCALE.y))));
     if (ImGui::Button((state < DESCRIPTION) || (state == DOWNLOAD) ? common["cancel"].c_str() : lang["back"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_cross))) {
         if (state < DESCRIPTION) {
             gui.vita_area = vita_area_state;
@@ -380,7 +379,7 @@ void draw_vita3k_update(GuiState &gui, EmuEnvState &emuenv) {
     }
 
     if (state > NO_UPDATE && state < DOWNLOAD) {
-        ImGui::SetCursorPos(ImVec2(display_size.x - WINDOW_POS.x - BUTTON_SIZE.x - (10.f * SCALE.x), (display_size.y - BUTTON_SIZE.y - (12.f * SCALE.y))));
+        ImGui::SetCursorPos(ImVec2(display_size.x - WINDOW_POS.x - BUTTON_SIZE.x - (10.f * RES_SCALE.x), (display_size.y - BUTTON_SIZE.y - (12.f * RES_SCALE.y))));
         if (ImGui::Button(state < UPDATE_VITA3K ? lang["next"].c_str() : lang["update"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle))) {
             state = (Vita3kUpdate)(state + 1);
             if (state == DOWNLOAD)
@@ -389,19 +388,19 @@ void draw_vita3k_update(GuiState &gui, EmuEnvState &emuenv) {
     }
 
     // Draw Cancel popup
-    const auto POPUP_SIZE = ImVec2(760.0f * SCALE.x, 436.0f * SCALE.y);
+    const auto POPUP_SIZE = ImVec2(760.0f * RES_SCALE.x, 436.0f * RES_SCALE.y);
     ImGui::SetNextWindowSize(POPUP_SIZE, ImGuiCond_Always);
     ImGui::SetNextWindowPos(ImVec2(WINDOW_POS.x + (display_size.x / 2.f) - (POPUP_SIZE.x / 2.f), WINDOW_POS.y + (display_size.y / 2.f) - (POPUP_SIZE.y / 2.f)), ImGuiCond_Always);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 10.f * SCALE.x);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 10.f * RES_SCALE.x);
     if (ImGui::BeginPopupModal("cancel_update_popup", &progress_state.pause, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoDecoration)) {
-        const auto LARGE_BUTTON_SIZE = ImVec2(310.f * SCALE.x, 46.f * SCALE.y);
+        const auto LARGE_BUTTON_SIZE = ImVec2(310.f * RES_SCALE.x, 46.f * RES_SCALE.y);
         auto &common = emuenv.common_dialog.lang.common;
-        const auto str_size = ImGui::CalcTextSize(lang["cancel_update_resume"].c_str(), 0, false, POPUP_SIZE.x - (120.f * SCALE.y));
-        ImGui::SetCursorPos(ImVec2(60.f * SCALE.x, (ImGui::GetWindowHeight() / 2.f) - (str_size.y / 2.f)));
-        ImGui::PushTextWrapPos(POPUP_SIZE.x - (120.f * SCALE.x));
+        const auto str_size = ImGui::CalcTextSize(lang["cancel_update_resume"].c_str(), 0, false, POPUP_SIZE.x - (120.f * RES_SCALE.y));
+        ImGui::SetCursorPos(ImVec2(60.f * RES_SCALE.x, (ImGui::GetWindowHeight() / 2.f) - (str_size.y / 2.f)));
+        ImGui::PushTextWrapPos(POPUP_SIZE.x - (120.f * RES_SCALE.x));
         ImGui::Text("%s", lang["cancel_update_resume"].c_str());
         ImGui::PopTextWrapPos();
-        ImGui::SetCursorPos(ImVec2((POPUP_SIZE.x / 2.f) - LARGE_BUTTON_SIZE.x - (20.f * SCALE.x), POPUP_SIZE.y - LARGE_BUTTON_SIZE.y - (22.0f * SCALE.y)));
+        ImGui::SetCursorPos(ImVec2((POPUP_SIZE.x / 2.f) - LARGE_BUTTON_SIZE.x - (20.f * RES_SCALE.x), POPUP_SIZE.y - LARGE_BUTTON_SIZE.y - (22.0f * RES_SCALE.y)));
         if (ImGui::Button(common["no"].c_str(), LARGE_BUTTON_SIZE)) {
             std::unique_lock<std::mutex> lock(progress_state.mutex);
             progress_state.pause = false;
@@ -409,7 +408,7 @@ void draw_vita3k_update(GuiState &gui, EmuEnvState &emuenv) {
 
             ImGui::CloseCurrentPopup();
         }
-        ImGui::SameLine(0, 40.f * SCALE.x);
+        ImGui::SameLine(0, 40.f * RES_SCALE.x);
         if (ImGui::Button(common["yes"].c_str(), LARGE_BUTTON_SIZE)) {
             std::unique_lock<std::mutex> lock(progress_state.mutex);
             progress_state.download = false;

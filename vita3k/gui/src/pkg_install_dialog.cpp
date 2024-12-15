@@ -90,15 +90,14 @@ void draw_pkg_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
 
     const ImVec2 display_size(emuenv.logical_viewport_size.x, emuenv.logical_viewport_size.y);
     const ImVec2 RES_SCALE(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const ImVec2 SCALE(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
-    const ImVec2 WINDOW_SIZE(616.f * SCALE.x, 264.f * SCALE.y);
-    const ImVec2 BUTTON_SIZE(180.f * SCALE.x, 45.f * SCALE.y);
+    const ImVec2 WINDOW_SIZE(616.f * RES_SCALE.x, 264.f * RES_SCALE.y);
+    const ImVec2 BUTTON_SIZE(180.f * RES_SCALE.x, 45.f * RES_SCALE.y);
 
     ImGui::SetNextWindowPos(ImVec2(emuenv.logical_viewport_pos.x + (display_size.x / 2.f) - (WINDOW_SIZE.x / 2), emuenv.logical_viewport_pos.y + (display_size.y / 2.f) - (WINDOW_SIZE.y / 2.f)), ImGuiCond_Always);
     ImGui::SetNextWindowSize(WINDOW_SIZE);
     if (ImGui::BeginPopupModal("install", &gui.file_menu.pkg_install_dialog, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration)) {
         ImGui::SetWindowFontScale(RES_SCALE.x);
-        const auto POS_BUTTON = (WINDOW_SIZE.x / 2.f) - (BUTTON_SIZE.x / 2.f) + (10.f * SCALE.x);
+        const auto POS_BUTTON = (WINDOW_SIZE.x / 2.f) - (BUTTON_SIZE.x / 2.f) + (10.f * RES_SCALE.x);
         TextColoredCentered(GUI_COLOR_TEXT_TITLE, title.c_str());
         ImGui::Spacing();
         ImGui::Separator();
@@ -137,19 +136,19 @@ void draw_pkg_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
         }
         case State::ZRIF: {
             title = lang["enter_zrif_key"];
-            ImGui::PushItemWidth(640.f * SCALE.x);
+            ImGui::PushItemWidth(640.f * RES_SCALE.x);
             ImGui::InputTextWithHint("##enter_zrif", lang["input_zrif"].c_str(), &zRIF);
             ImGui::PopItemWidth();
             SetTooltipEx(lang["copy_paste_zrif"].c_str());
             ImGui::Spacing();
             ImGui::Separator();
             ImGui::Spacing();
-            ImGui::SetCursorPos(ImVec2(POS_BUTTON - (BUTTON_SIZE.x / 2) - (10.f * SCALE.x), WINDOW_SIZE.y / 2));
+            ImGui::SetCursorPos(ImVec2(POS_BUTTON - (BUTTON_SIZE.x / 2) - (10.f * RES_SCALE.x), WINDOW_SIZE.y / 2));
             if (ImGui::Button(common["cancel"].c_str(), BUTTON_SIZE)) {
                 state = State::UNDEFINED;
                 zRIF.clear();
             }
-            ImGui::SameLine(0, 20.f * SCALE.x);
+            ImGui::SameLine(0, 20.f * RES_SCALE.x);
             if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE) && !zRIF.empty())
                 state = State::INSTALL;
             break;
@@ -181,7 +180,7 @@ void draw_pkg_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
             if (license_path != "")
                 ImGui::Checkbox(lang["delete_bin_rif"].c_str(), &delete_license_file);
             ImGui::Spacing();
-            ImGui::SetCursorPos(ImVec2(POS_BUTTON, ImGui::GetWindowSize().y - BUTTON_SIZE.y - (20.f * SCALE.y)));
+            ImGui::SetCursorPos(ImVec2(POS_BUTTON, ImGui::GetWindowSize().y - BUTTON_SIZE.y - (20.f * RES_SCALE.y)));
             if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE)) {
                 if (delete_pkg_file) {
                     fs::remove(fs::path(pkg_path.native()));
@@ -207,9 +206,9 @@ void draw_pkg_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
         }
         case State::FAIL: {
             title = indicator["install_failed"];
-            ImGui::SetCursorPosY((WINDOW_SIZE.y / 2.f) - (20.f * SCALE.y));
+            ImGui::SetCursorPosY((WINDOW_SIZE.y / 2.f) - (20.f * RES_SCALE.y));
             TextColoredCentered(GUI_COLOR_TEXT, lang["failed_install_package"].c_str());
-            ImGui::SetCursorPos(ImVec2(POS_BUTTON, ImGui::GetWindowSize().y - BUTTON_SIZE.y - (20.f * SCALE.y)));
+            ImGui::SetCursorPos(ImVec2(POS_BUTTON, ImGui::GetWindowSize().y - BUTTON_SIZE.y - (20.f * RES_SCALE.y)));
             if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE)) {
                 gui.file_menu.pkg_install_dialog = false;
                 pkg_path = "";
@@ -221,15 +220,15 @@ void draw_pkg_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
         }
         case State::INSTALLING: {
             title = indicator["installing"];
-            ImGui::SetCursorPos(ImVec2(178.f * SCALE.x, ImGui::GetCursorPosY() + 30.f * SCALE.y));
+            ImGui::SetCursorPos(ImVec2(178.f * RES_SCALE.x, ImGui::GetCursorPosY() + 30.f * RES_SCALE.y));
             ImGui::TextColored(GUI_COLOR_TEXT, "%s", emuenv.app_info.app_title.c_str());
-            ImGui::SetCursorPos(ImVec2(178.f * SCALE.x, ImGui::GetCursorPosY() + 30.f * SCALE.y));
+            ImGui::SetCursorPos(ImVec2(178.f * RES_SCALE.x, ImGui::GetCursorPosY() + 30.f * RES_SCALE.y));
             ImGui::TextColored(GUI_COLOR_TEXT, "%s", indicator["installing"].c_str());
-            const float PROGRESS_BAR_WIDTH = 502.f * SCALE.x;
-            ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2.f) - (PROGRESS_BAR_WIDTH / 2.f), ImGui::GetCursorPosY() + 30.f * SCALE.y));
+            const float PROGRESS_BAR_WIDTH = 502.f * RES_SCALE.x;
+            ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2.f) - (PROGRESS_BAR_WIDTH / 2.f), ImGui::GetCursorPosY() + 30.f * RES_SCALE.y));
             ImGui::PushStyleColor(ImGuiCol_PlotHistogram, GUI_PROGRESS_BAR);
-            ImGui::ProgressBar(progress / 100.f, ImVec2(PROGRESS_BAR_WIDTH, 15.f * SCALE.x), "");
-            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 16.f * SCALE.y);
+            ImGui::ProgressBar(progress / 100.f, ImVec2(PROGRESS_BAR_WIDTH, 15.f * RES_SCALE.x), "");
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 16.f * RES_SCALE.y);
             TextColoredCentered(GUI_COLOR_TEXT, std::to_string(uint32_t(progress)).append("%").c_str());
             ImGui::PopStyleColor();
         }

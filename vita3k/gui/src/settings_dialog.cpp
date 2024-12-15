@@ -476,7 +476,6 @@ void set_config(GuiState &gui, EmuEnvState &emuenv, const std::string &app_path)
 void draw_settings_dialog(GuiState &gui, EmuEnvState &emuenv) {
     const ImVec2 display_size(emuenv.logical_viewport_size.x, emuenv.logical_viewport_size.y);
     const auto RES_SCALE = ImVec2(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const auto SCALE = ImVec2(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
 
     auto &lang = gui.lang.settings_dialog;
     auto &common = emuenv.common_dialog.lang.common;
@@ -516,7 +515,7 @@ void draw_settings_dialog(GuiState &gui, EmuEnvState &emuenv) {
             ImGui::TextColored(GUI_COLOR_TEXT_TITLE, "%s", lang.core["modules_list"].c_str());
             SetTooltipEx(lang.core["select_modules"].c_str());
             ImGui::Spacing();
-            ImGui::PushItemWidth(260 * SCALE.x);
+            ImGui::PushItemWidth(260 * RES_SCALE.x);
             if (ImGui::BeginListBox("##modules_list", { 0.0f, ImGui::GetTextLineHeightWithSpacing() * 8.25f + ImGui::GetStyle().FramePadding.y * 2.0f })) {
                 for (auto &m : gui.modules) {
                     const auto module = std::find(config.lle_modules.begin(), config.lle_modules.end(), m.first);
@@ -535,7 +534,7 @@ void draw_settings_dialog(GuiState &gui, EmuEnvState &emuenv) {
             ImGui::PopItemWidth();
             ImGui::Spacing();
             ImGui::TextColored(GUI_COLOR_TEXT, "%s", lang.core["search_modules"].c_str());
-            gui.module_search_bar.Draw("##module_search_bar", 260 * SCALE.x);
+            gui.module_search_bar.Draw("##module_search_bar", 260 * RES_SCALE.x);
             ImGui::Spacing();
             if (ImGui::Button(lang.core["clear_list"].c_str())) {
                 config.lle_modules.clear();
@@ -673,12 +672,12 @@ void draw_settings_dialog(GuiState &gui, EmuEnvState &emuenv) {
         ImGui::PushID("Res scal");
         if (config.resolution_multiplier == 0.5f)
             ImGui::BeginDisabled();
-        if (ImGui::Button("<", ImVec2(20.f * SCALE.x, 0)))
+        if (ImGui::Button("<", ImVec2(20.f * RES_SCALE.x, 0)))
             config.resolution_multiplier -= 0.25f;
         if (config.resolution_multiplier == 0.5f)
             ImGui::EndDisabled();
-        ImGui::SameLine(0, 5.f * SCALE.x);
-        ImGui::PushItemWidth(-100.f * SCALE.x);
+        ImGui::SameLine(0, 5.f * RES_SCALE.x);
+        ImGui::PushItemWidth(-100.f * RES_SCALE.x);
         int slider_position = static_cast<int>(config.resolution_multiplier * 4);
         if (ImGui::SliderInt("##res_scal", &slider_position, 2, 32, fmt::format("{}x", config.resolution_multiplier).c_str(), ImGuiSliderFlags_None)) {
             config.resolution_multiplier = static_cast<float>(slider_position) / 4.0f;
@@ -687,24 +686,24 @@ void draw_settings_dialog(GuiState &gui, EmuEnvState &emuenv) {
         }
         ImGui::PopItemWidth();
         SetTooltipEx(lang.gpu["internal_resolution_upscaling_description"].c_str());
-        ImGui::SameLine(0, 5 * SCALE.x);
+        ImGui::SameLine(0, 5 * RES_SCALE.x);
         if (config.resolution_multiplier == 8.0f)
             ImGui::BeginDisabled();
-        if (ImGui::Button(">", ImVec2(20.f * SCALE.x, 0)))
+        if (ImGui::Button(">", ImVec2(20.f * RES_SCALE.x, 0)))
             config.resolution_multiplier += 0.25f;
         if (config.resolution_multiplier == 8.0f)
             ImGui::EndDisabled();
         ImGui::SameLine();
         if ((config.resolution_multiplier == 1.0f) && !config.disable_surface_sync)
             ImGui::BeginDisabled();
-        if (ImGui::Button(lang.gpu["reset"].c_str(), ImVec2(60.f * SCALE.x, 0)))
+        if (ImGui::Button(lang.gpu["reset"].c_str(), ImVec2(60.f * RES_SCALE.x, 0)))
             config.resolution_multiplier = 1.0f;
 
         if ((config.resolution_multiplier == 1.0f) && !config.disable_surface_sync)
             ImGui::EndDisabled();
         ImGui::Spacing();
         const auto res_scal = fmt::format("{}x{}", static_cast<int>(960 * config.resolution_multiplier), static_cast<int>(544 * config.resolution_multiplier));
-        ImGui::SetCursorPosX((ImGui::GetWindowWidth() / 2.f) - (ImGui::CalcTextSize(res_scal.c_str()).x / 2.f) - (35.f * SCALE.x));
+        ImGui::SetCursorPosX((ImGui::GetWindowWidth() / 2.f) - (ImGui::CalcTextSize(res_scal.c_str()).x / 2.f) - (35.f * RES_SCALE.x));
         ImGui::Text("%s", res_scal.c_str());
         ImGui::PopID();
 
@@ -718,27 +717,27 @@ void draw_settings_dialog(GuiState &gui, EmuEnvState &emuenv) {
         ImGui::PushID("Aniso filter");
         if (config.anisotropic_filtering == 1)
             ImGui::BeginDisabled();
-        if (ImGui::Button("<", ImVec2(20.f * SCALE.x, 0)))
+        if (ImGui::Button("<", ImVec2(20.f * RES_SCALE.x, 0)))
             config.anisotropic_filtering = 1 << --current_aniso_filter_log;
         if (config.anisotropic_filtering == 1)
             ImGui::EndDisabled();
-        ImGui::SameLine(0, 5 * SCALE.x);
-        ImGui::PushItemWidth(-100.f * SCALE.x);
+        ImGui::SameLine(0, 5 * RES_SCALE.x);
+        ImGui::PushItemWidth(-100.f * RES_SCALE.x);
         if (ImGui::SliderInt("##aniso_filter", &current_aniso_filter_log, 0, max_aniso_filter_log, fmt::format("{}x", config.anisotropic_filtering).c_str()))
             config.anisotropic_filtering = 1 << current_aniso_filter_log;
         ImGui::PopItemWidth();
         SetTooltipEx(lang.gpu["anisotropic_filtering_description"].c_str());
-        ImGui::SameLine(0, 5 * SCALE.x);
+        ImGui::SameLine(0, 5 * RES_SCALE.x);
         if (current_aniso_filter_log == max_aniso_filter_log)
             ImGui::BeginDisabled();
-        if (ImGui::Button(">", ImVec2(20.f * SCALE.x, 0)))
+        if (ImGui::Button(">", ImVec2(20.f * RES_SCALE.x, 0)))
             config.anisotropic_filtering = 1 << ++current_aniso_filter_log;
         if (current_aniso_filter_log == max_aniso_filter_log)
             ImGui::EndDisabled();
         ImGui::SameLine();
         if (config.anisotropic_filtering == 1)
             ImGui::BeginDisabled();
-        if (ImGui::Button(lang.gpu["reset"].c_str(), ImVec2(60.f * SCALE.x, 0))) {
+        if (ImGui::Button(lang.gpu["reset"].c_str(), ImVec2(60.f * RES_SCALE.x, 0))) {
             config.anisotropic_filtering = 1;
             current_aniso_filter_log = 0;
         }
@@ -1210,11 +1209,11 @@ void draw_settings_dialog(GuiState &gui, EmuEnvState &emuenv) {
     ImGui::Spacing();
     ImGui::Separator();
     ImGui::Spacing();
-    static const auto BUTTON_SIZE = ImVec2(120.f * SCALE.x, 0.f);
-    ImGui::SetCursorPosX((ImGui::GetWindowSize().x / 2.f) - BUTTON_SIZE.x - (10.f * SCALE.x));
+    static const auto BUTTON_SIZE = ImVec2(120.f * RES_SCALE.x, 0.f);
+    ImGui::SetCursorPosX((ImGui::GetWindowSize().x / 2.f) - BUTTON_SIZE.x - (10.f * RES_SCALE.x));
     if (ImGui::Button(common["close"].c_str(), BUTTON_SIZE))
         show_settings_dialog = false;
-    ImGui::SameLine(0, 20.f * SCALE.x);
+    ImGui::SameLine(0, 20.f * RES_SCALE.x);
     const auto is_apply = !emuenv.io.app_path.empty() && (!is_custom_config || (emuenv.app_path == emuenv.io.app_path));
     const auto is_reboot = (emuenv.renderer->current_backend != emuenv.backend_renderer) || (config.resolution_multiplier != emuenv.cfg.current_config.resolution_multiplier);
     if (ImGui::Button(is_apply ? (is_reboot ? lang.main_window["save_reboot"].c_str() : lang.main_window["save_apply"].c_str()) : lang.main_window["save"].c_str(), BUTTON_SIZE)) {

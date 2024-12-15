@@ -88,17 +88,16 @@ void draw_archive_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
 
     const ImVec2 display_size(emuenv.logical_viewport_size.x, emuenv.logical_viewport_size.y);
     const auto RES_SCALE = ImVec2(emuenv.gui_scale.x, emuenv.gui_scale.y);
-    const auto SCALE = ImVec2(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
-    const auto BUTTON_SIZE = ImVec2(190.f * SCALE.x, 45.f * SCALE.y);
-    const auto WINDOW_SIZE = ImVec2(616.f * SCALE.x, (state == State::UNDEFINED ? 240.f : 340.f) * SCALE.y);
+    const auto BUTTON_SIZE = ImVec2(190.f * RES_SCALE.x, 45.f * RES_SCALE.y);
+    const auto WINDOW_SIZE = ImVec2(616.f * RES_SCALE.x, (state == State::UNDEFINED ? 240.f : 340.f) * RES_SCALE.y);
 
     ImGui::SetNextWindowPos(ImVec2(emuenv.logical_viewport_pos.x, emuenv.logical_viewport_pos.y), ImGuiCond_Always);
     ImGui::SetNextWindowSize(display_size);
     ImGui::Begin("archive_install", &gui.file_menu.archive_install_dialog, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
     ImGui::SetNextWindowPos(ImVec2(emuenv.logical_viewport_pos.x + (display_size.x / 2.f) - (WINDOW_SIZE.x / 2.f), emuenv.logical_viewport_pos.y + (display_size.y / 2.f) - (WINDOW_SIZE.y / 2.f)), ImGuiCond_Always);
-    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * SCALE.x);
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * RES_SCALE.x);
     ImGui::BeginChild("##archive_Install_child", WINDOW_SIZE, ImGuiChildFlags_Borders | ImGuiChildFlags_AlwaysAutoResize | ImGuiChildFlags_AutoResizeX | ImGuiChildFlags_AutoResizeY, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
-    const auto POS_BUTTON = (ImGui::GetWindowWidth() / 2.f) - (BUTTON_SIZE.x / 2.f) + (10.f * SCALE.x);
+    const auto POS_BUTTON = (ImGui::GetWindowWidth() / 2.f) - (BUTTON_SIZE.x / 2.f) + (10.f * RES_SCALE.x);
     ImGui::SetWindowFontScale(RES_SCALE.x);
     TextColoredCentered(GUI_COLOR_TEXT_MENUBAR, title.c_str());
     ImGui::Spacing();
@@ -183,36 +182,36 @@ void draw_archive_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
         }
         case State::INSTALLING: {
             title = indicator["installing"];
-            ImGui::SetCursorPos(ImVec2(178.f * SCALE.x, ImGui::GetCursorPosY() + (20.f * SCALE.y)));
+            ImGui::SetCursorPos(ImVec2(178.f * RES_SCALE.x, ImGui::GetCursorPosY() + (20.f * RES_SCALE.y)));
             ImGui::TextColored(GUI_COLOR_TEXT, "%s", emuenv.app_info.app_title.c_str());
-            ImGui::SetCursorPos(ImVec2(178.f * SCALE.x, ImGui::GetCursorPosY() + (20.f * SCALE.y)));
+            ImGui::SetCursorPos(ImVec2(178.f * RES_SCALE.x, ImGui::GetCursorPosY() + (20.f * RES_SCALE.y)));
             ImGui::TextColored(GUI_COLOR_TEXT, "%s", indicator["installing"].c_str());
-            const float PROGRESS_BAR_WIDTH = 502.f * SCALE.x;
+            const float PROGRESS_BAR_WIDTH = 502.f * RES_SCALE.x;
             const auto PROGRESS_BAR_POS = (WINDOW_SIZE.x / 2) - (PROGRESS_BAR_WIDTH / 2.f);
             ImGui::PushStyleColor(ImGuiCol_PlotHistogram, GUI_PROGRESS_BAR);
             // Draw Global Progress bar
-            ImGui::SetCursorPos(ImVec2(PROGRESS_BAR_POS, ImGui::GetCursorPosY() + (14.f * SCALE.y)));
-            ImGui::ProgressBar(global_progress / archives_count, ImVec2(PROGRESS_BAR_WIDTH, 15.f * SCALE.y), "");
-            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (6.f * SCALE.y));
+            ImGui::SetCursorPos(ImVec2(PROGRESS_BAR_POS, ImGui::GetCursorPosY() + (14.f * RES_SCALE.y)));
+            ImGui::ProgressBar(global_progress / archives_count, ImVec2(PROGRESS_BAR_WIDTH, 15.f * RES_SCALE.y), "");
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (6.f * RES_SCALE.y));
             TextColoredCentered(GUI_COLOR_TEXT, fmt::format("{}/{}", global_progress, archives_count).c_str());
             // Draw Progress bar of count contents
-            ImGui::SetCursorPos(ImVec2(PROGRESS_BAR_POS, ImGui::GetCursorPosY() + (14.f * SCALE.y)));
-            ImGui::ProgressBar(current / count, ImVec2(PROGRESS_BAR_WIDTH, 15.f * SCALE.y), "");
-            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (6.f * SCALE.y));
+            ImGui::SetCursorPos(ImVec2(PROGRESS_BAR_POS, ImGui::GetCursorPosY() + (14.f * RES_SCALE.y)));
+            ImGui::ProgressBar(current / count, ImVec2(PROGRESS_BAR_WIDTH, 15.f * RES_SCALE.y), "");
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (6.f * RES_SCALE.y));
             TextColoredCentered(GUI_COLOR_TEXT, fmt::format("{}/{}", current.load(), count.load()).c_str());
             // Draw Progress bar
-            ImGui::SetCursorPos(ImVec2(PROGRESS_BAR_POS, ImGui::GetCursorPosY() + (14.f * SCALE.y)));
-            ImGui::ProgressBar(progress / 100.f, ImVec2(PROGRESS_BAR_WIDTH, 15.f * SCALE.y), "");
-            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (6.f * SCALE.y));
+            ImGui::SetCursorPos(ImVec2(PROGRESS_BAR_POS, ImGui::GetCursorPosY() + (14.f * RES_SCALE.y)));
+            ImGui::ProgressBar(progress / 100.f, ImVec2(PROGRESS_BAR_WIDTH, 15.f * RES_SCALE.y), "");
+            ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (6.f * RES_SCALE.y));
             TextColoredCentered(GUI_COLOR_TEXT, std::to_string(progress).append("%").c_str());
             ImGui::PopStyleColor();
             break;
         }
         case State::FINISHED: {
             title = indicator["install_complete"];
-            ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowPos().x + (5.f * SCALE.x), ImGui::GetWindowPos().y + BUTTON_SIZE.y));
+            ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowPos().x + (5.f * RES_SCALE.x), ImGui::GetWindowPos().y + BUTTON_SIZE.y));
             ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.f);
-            ImGui::BeginChild("##content_installed_list", ImVec2(WINDOW_SIZE.x - (10.f * SCALE.x), WINDOW_SIZE.y - (BUTTON_SIZE.y * 2.f) - (25 * SCALE.y)), ImGuiChildFlags_None, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
+            ImGui::BeginChild("##content_installed_list", ImVec2(WINDOW_SIZE.x - (10.f * RES_SCALE.x), WINDOW_SIZE.y - (BUTTON_SIZE.y * 2.f) - (25 * RES_SCALE.y)), ImGuiChildFlags_None, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
             if (!contents_archives.empty()) {
                 const auto count_content_state = [&](const fs::path &path, const bool content_state) {
                     return std::count_if(contents_archives[path].begin(), contents_archives[path].end(), [&](const ContentInfo &c) {
@@ -268,7 +267,7 @@ void draw_archive_install_dialog(GuiState &gui, EmuEnvState &emuenv) {
             ImGui::Separator();
             ImGui::Spacing();
             ImGui::Checkbox(lang["delete_archive"].c_str(), &delete_archive_file);
-            ImGui::SetCursorPos(ImVec2(POS_BUTTON, WINDOW_SIZE.y - BUTTON_SIZE.y - (12.f * SCALE.y)));
+            ImGui::SetCursorPos(ImVec2(POS_BUTTON, WINDOW_SIZE.y - BUTTON_SIZE.y - (12.f * RES_SCALE.y)));
             if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE)) {
                 for (const auto &archive : contents_archives) {
                     for (const auto &content : archive.second) {

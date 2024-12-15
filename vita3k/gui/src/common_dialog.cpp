@@ -638,20 +638,19 @@ static void draw_savedata_dialog(GuiState &gui, EmuEnvState &emuenv, float FONT_
 void draw_common_dialog(GuiState &gui, EmuEnvState &emuenv) {
     ImGui::PushFont(gui.vita_font);
     const auto RES_SCALE = ImVec2(emuenv.logical_viewport_size.x / emuenv.res_width_dpi_scale, emuenv.logical_viewport_size.y / emuenv.res_height_dpi_scale);
-    const auto SCALE = ImVec2(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
     if (emuenv.common_dialog.status == SCE_COMMON_DIALOG_STATUS_RUNNING) {
         switch (emuenv.common_dialog.type) {
         case IME_DIALOG:
             draw_ime_dialog(emuenv, emuenv.common_dialog, RES_SCALE.x);
             break;
         case MESSAGE_DIALOG:
-            draw_message_dialog(emuenv.common_dialog, RES_SCALE.x, SCALE);
+            draw_message_dialog(emuenv.common_dialog, RES_SCALE.x, RES_SCALE);
             break;
         case TROPHY_SETUP_DIALOG:
-            draw_trophy_setup_dialog(emuenv.common_dialog, RES_SCALE.x, SCALE);
+            draw_trophy_setup_dialog(emuenv.common_dialog, RES_SCALE.x, RES_SCALE);
             break;
         case SAVEDATA_DIALOG:
-            draw_savedata_dialog(gui, emuenv, RES_SCALE.x, SCALE);
+            draw_savedata_dialog(gui, emuenv, RES_SCALE.x, RES_SCALE);
             break;
         default:
             break;

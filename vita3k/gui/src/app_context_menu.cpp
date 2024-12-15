@@ -513,12 +513,11 @@ void draw_app_context_menu(GuiState &gui, EmuEnvState &emuenv, const std::string
         ImGui::EndPopup();
     }
 
-    const auto SCALE = ImVec2(RES_SCALE.x * emuenv.dpi_scale, RES_SCALE.y * emuenv.dpi_scale);
-    const auto WINDOW_SIZE = ImVec2(756.0f * SCALE.x, 436.0f * SCALE.y);
+    const auto WINDOW_SIZE = ImVec2(756.0f * RES_SCALE.x, 436.0f * RES_SCALE.y);
 
-    const auto BUTTON_SIZE = ImVec2(320.f * SCALE.x, 46.f * SCALE.y);
-    const auto PUPOP_ICON_SIZE = ImVec2(96.f * SCALE.x, 96.f * SCALE.y);
-    const auto INFO_ICON_SIZE = ImVec2(128.f * SCALE.x, 128.f * SCALE.y);
+    const auto BUTTON_SIZE = ImVec2(320.f * RES_SCALE.x, 46.f * RES_SCALE.y);
+    const auto PUPOP_ICON_SIZE = ImVec2(96.f * RES_SCALE.x, 96.f * RES_SCALE.y);
+    const auto INFO_ICON_SIZE = ImVec2(128.f * RES_SCALE.x, 128.f * RES_SCALE.y);
 
     // Context Dialog
     if (!context_dialog.empty()) {
@@ -527,51 +526,51 @@ void draw_app_context_menu(GuiState &gui, EmuEnvState &emuenv, const std::string
         ImGui::Begin("##context_dialog", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
         ImGui::SetNextWindowBgAlpha(0.999f);
         ImGui::SetNextWindowPos(ImVec2(emuenv.logical_viewport_pos.x + (display_size.x / 2.f) - (WINDOW_SIZE.x / 2.f), emuenv.logical_viewport_pos.y + (display_size.y / 2.f) - (WINDOW_SIZE.y / 2.f)), ImGuiCond_Always);
-        ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * SCALE.x);
+        ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * RES_SCALE.x);
         ImGui::BeginChild("##context_dialog_child", WINDOW_SIZE, ImGuiChildFlags_Borders, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
-        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * SCALE.x);
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * RES_SCALE.x);
         // Update History
         if (context_dialog == "history") {
-            ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowPos().x + 20.f * SCALE.x, ImGui::GetWindowPos().y + BUTTON_SIZE.y));
-            ImGui::BeginChild("##info_update_list", ImVec2(WINDOW_SIZE.x - (30.f * SCALE.x), WINDOW_SIZE.y - (BUTTON_SIZE.y * 2.f) - (25.f * SCALE.y)), ImGuiChildFlags_None, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
+            ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowPos().x + 20.f * RES_SCALE.x, ImGui::GetWindowPos().y + BUTTON_SIZE.y));
+            ImGui::BeginChild("##info_update_list", ImVec2(WINDOW_SIZE.x - (30.f * RES_SCALE.x), WINDOW_SIZE.y - (BUTTON_SIZE.y * 2.f) - (25.f * RES_SCALE.y)), ImGuiChildFlags_None, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings);
             // Reverse iterator to show the latest update first
             for (auto it = update_history_infos.rbegin(); it != update_history_infos.rend(); ++it) {
                 ImGui::SetWindowFontScale(1.3f);
                 const auto version_str = fmt::format(fmt::runtime(lang.main["history_version"]), it->first);
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", version_str.c_str());
                 ImGui::SetWindowFontScale(0.9f);
-                ImGui::PushTextWrapPos(WINDOW_SIZE.x - (80.f * SCALE.x));
+                ImGui::PushTextWrapPos(WINDOW_SIZE.x - (80.f * RES_SCALE.x));
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s\n", it->second.c_str());
                 ImGui::PopTextWrapPos();
                 ImGui::TextColored(GUI_COLOR_TEXT, "\n");
             }
             ImGui::EndChild();
             ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
-            ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2.f) - (BUTTON_SIZE.x / 2.f), WINDOW_SIZE.y - BUTTON_SIZE.y - (22.f * SCALE.y)));
+            ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2.f) - (BUTTON_SIZE.x / 2.f), WINDOW_SIZE.y - BUTTON_SIZE.y - (22.f * RES_SCALE.y)));
         } else {
             // Delete Data
-            const auto ICON_MARGIN = 24.f * SCALE.y;
+            const auto ICON_MARGIN = 24.f * RES_SCALE.y;
             if (gui.app_selector.user_apps_icon.contains(title_id)) {
                 ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2.f) - (PUPOP_ICON_SIZE.x / 2.f), ICON_MARGIN));
                 const auto POS_MIN = ImGui::GetCursorScreenPos();
                 const ImVec2 POS_MAX(POS_MIN.x + PUPOP_ICON_SIZE.x, POS_MIN.y + PUPOP_ICON_SIZE.y);
-                ImGui::GetWindowDrawList()->AddImageRounded(gui.app_selector.user_apps_icon[title_id], POS_MIN, POS_MAX, ImVec2(0, 0), ImVec2(1, 1), IM_COL32_WHITE, PUPOP_ICON_SIZE.x * SCALE.x, ImDrawFlags_RoundCornersAll);
+                ImGui::GetWindowDrawList()->AddImageRounded(gui.app_selector.user_apps_icon[title_id], POS_MIN, POS_MAX, ImVec2(0, 0), ImVec2(1, 1), IM_COL32_WHITE, PUPOP_ICON_SIZE.x * RES_SCALE.x, ImDrawFlags_RoundCornersAll);
             }
             ImGui::SetWindowFontScale(1.6f * RES_SCALE.x);
-            ImGui::SetCursorPosY(ICON_MARGIN + PUPOP_ICON_SIZE.y + (4.f * SCALE.y));
+            ImGui::SetCursorPosY(ICON_MARGIN + PUPOP_ICON_SIZE.y + (4.f * RES_SCALE.y));
             TextColoredCentered(GUI_COLOR_TEXT, APP_INDEX->stitle.c_str());
             ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
             ImGui::SetCursorPosY((WINDOW_SIZE.y / 2) + 10);
-            TextColoredCentered(GUI_COLOR_TEXT, context_dialog.c_str(), 54.f * SCALE.x);
+            TextColoredCentered(GUI_COLOR_TEXT, context_dialog.c_str(), 54.f * RES_SCALE.x);
             if (context_dialog == lang.deleting["app_delete"])
                 SetTooltipEx(lang.deleting["app_delete_description"].c_str());
             ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
-            ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2) - (BUTTON_SIZE.x + (20.f * SCALE.x)), WINDOW_SIZE.y - BUTTON_SIZE.y - (24.0f * SCALE.y)));
+            ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2) - (BUTTON_SIZE.x + (20.f * RES_SCALE.x)), WINDOW_SIZE.y - BUTTON_SIZE.y - (24.0f * RES_SCALE.y)));
             if (ImGui::Button(common["cancel"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle))) {
                 context_dialog.clear();
             }
             ImGui::SameLine();
-            ImGui::SetCursorPosX((WINDOW_SIZE.x / 2.f) + (20.f * SCALE.x));
+            ImGui::SetCursorPosX((WINDOW_SIZE.x / 2.f) + (20.f * RES_SCALE.x));
         }
         if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_cross))) {
             if (context_dialog == lang.deleting["app_delete"])
@@ -596,21 +595,21 @@ void draw_app_context_menu(GuiState &gui, EmuEnvState &emuenv, const std::string
         ImGui::SetNextWindowSize(display_size, ImGuiCond_Always);
         ImGui::Begin("##information", &gui.vita_area.app_information, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
         ImGui::SetWindowFontScale(1.5f * RES_SCALE.x);
-        ImGui::SetCursorPos(ImVec2(10.0f * SCALE.x, 10.0f * SCALE.y));
-        if (ImGui::Button("X", ImVec2(40.f * SCALE.x, 40.f * SCALE.y)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle))) {
+        ImGui::SetCursorPos(ImVec2(10.0f * RES_SCALE.x, 10.0f * RES_SCALE.y));
+        if (ImGui::Button("X", ImVec2(40.f * RES_SCALE.x, 40.f * RES_SCALE.y)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle))) {
             gui.vita_area.app_information = false;
             gui.vita_area.information_bar = true;
         }
         if (get_app_icon(gui, title_id)->first == title_id) {
-            ImGui::SetCursorPos(ImVec2((display_size.x / 2.f) - (INFO_ICON_SIZE.x / 2.f), 22.f * SCALE.x));
+            ImGui::SetCursorPos(ImVec2((display_size.x / 2.f) - (INFO_ICON_SIZE.x / 2.f), 22.f * RES_SCALE.x));
             const auto POS_MIN = ImGui::GetCursorScreenPos();
             const ImVec2 POS_MAX(POS_MIN.x + INFO_ICON_SIZE.x, POS_MIN.y + INFO_ICON_SIZE.y);
-            ImGui::GetWindowDrawList()->AddImageRounded(get_app_icon(gui, title_id)->second, POS_MIN, POS_MAX, ImVec2(0, 0), ImVec2(1, 1), IM_COL32_WHITE, INFO_ICON_SIZE.x * SCALE.x, ImDrawFlags_RoundCornersAll);
+            ImGui::GetWindowDrawList()->AddImageRounded(get_app_icon(gui, title_id)->second, POS_MIN, POS_MAX, ImVec2(0, 0), ImVec2(1, 1), IM_COL32_WHITE, INFO_ICON_SIZE.x * RES_SCALE.x, ImDrawFlags_RoundCornersAll);
         }
-        ImGui::SetCursorPos(ImVec2((display_size.x / 2.f) - ImGui::CalcTextSize((lang.info["name"] + "  ").c_str()).x, INFO_ICON_SIZE.y + (50.f * SCALE.y)));
+        ImGui::SetCursorPos(ImVec2((display_size.x / 2.f) - ImGui::CalcTextSize((lang.info["name"] + "  ").c_str()).x, INFO_ICON_SIZE.y + (50.f * RES_SCALE.y)));
         ImGui::TextColored(GUI_COLOR_TEXT, "%s ", lang.info["name"].c_str());
         ImGui::SameLine();
-        ImGui::PushTextWrapPos(display_size.x - (85.f * SCALE.x));
+        ImGui::PushTextWrapPos(display_size.x - (85.f * RES_SCALE.x));
         ImGui::TextColored(GUI_COLOR_TEXT, "%s", APP_INDEX->title.c_str());
         ImGui::PopTextWrapPos();
         if (!is_system_app && (title_id != "NPXS10007")) {
