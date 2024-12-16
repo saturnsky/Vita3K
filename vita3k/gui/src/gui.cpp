@@ -285,19 +285,6 @@ vfs::FileBuffer init_default_icon(GuiState &gui, EmuEnvState &emuenv) {
     return buffer;
 }
 
-void update_font(GuiState &gui, EmuEnvState &emuenv) {
-    ImGuiIO &io = ImGui::GetIO();
-
-    // First destroy existing font textures (is this correct?)
-    ImGui_ImplSdl_InvalidateDeviceObjects(gui.imgui_state.get());
-
-    io.Fonts->Clear();
-    init_font(gui, emuenv);
-
-    // Rebuild font atlas
-    ImGui_ImplSdl_CreateDeviceObjects(gui.imgui_state.get());
-}
-
 static IconData load_app_icon(GuiState &gui, EmuEnvState &emuenv, const std::string &app_path) {
     IconData image;
     vfs::FileBuffer buffer;
