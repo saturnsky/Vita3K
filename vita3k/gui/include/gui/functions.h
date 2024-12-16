@@ -106,6 +106,7 @@ void select_app(GuiState &gui, const std::string &title_id);
 void set_config(GuiState &gui, EmuEnvState &emuenv, const std::string &app_path);
 void set_shaders_compiled_display(GuiState &gui, EmuEnvState &emuenv);
 void update_app(GuiState &gui, EmuEnvState &emuenv, const std::string &app_path);
+void update_font(GuiState &gui, EmuEnvState &emuenv);
 void update_last_time_app_used(GuiState &gui, EmuEnvState &emuenv, const std::string &app);
 void update_live_area_current_open_apps_list(GuiState &gui, EmuEnvState &emuenv, const std::string &app_path);
 void update_notice_info(GuiState &gui, EmuEnvState &emuenv, const std::string &type);

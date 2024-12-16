@@ -757,8 +757,13 @@ bool handle_events(EmuEnvState &emuenv, GuiState &gui) {
             break;
 
         case SDL_WINDOWEVENT:
+        {
+            float old_dpi_scale = emuenv.system_dpi_scale;
             handle_window_event(emuenv, event.window);
+            if (old_dpi_scale != emuenv.system_dpi_scale)
+                gui::update_font(gui, emuenv);
             break;
+        }
 
         case SDL_FINGERDOWN:
         case SDL_FINGERMOTION:
