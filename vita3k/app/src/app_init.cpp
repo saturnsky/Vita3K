@@ -81,13 +81,8 @@ void update_viewport(EmuEnvState &state) {
     state.drawable_size.x = w;
     state.drawable_size.y = h;
 
-    if (!state.use_manual_dpi_scaling) {
-        state.dpi_scale = static_cast<float>(state.drawable_size.x) / state.window_size.x;
-    }
-    ImGui::GetIO().FontGlobalScale = 1.f / state.dpi_scale;
-
-    state.res_width_dpi_scale = static_cast<uint32_t>(DEFAULT_RES_WIDTH * state.dpi_scale);
-    state.res_height_dpi_scale = static_cast<uint32_t>(DEFAULT_RES_HEIGHT * state.dpi_scale);
+    state.system_dpi_scale = static_cast<float>(state.drawable_size.x) / state.window_size.x;
+    ImGui::GetIO().FontGlobalScale = 1.f / state.system_dpi_scale;
 
     if (h > 0) {
         const float window_aspect = static_cast<float>(w) / h;
@@ -127,8 +122,8 @@ void update_viewport(EmuEnvState &state) {
             state.drawable_viewport_pos.y = (state.drawable_size.y - state.drawable_viewport_size.y) / 2;
         }
 
-        state.gui_scale.x = state.logical_viewport_size.x / static_cast<float>(DEFAULT_RES_WIDTH);
-        state.gui_scale.y = state.logical_viewport_size.y / static_cast<float>(DEFAULT_RES_HEIGHT);
+        state.gui_scale.x = state.logical_viewport_size.x / static_cast<float>(DEFAULT_RES_WIDTH) / state.manual_dpi_scale;
+        state.gui_scale.y = state.logical_viewport_size.y / static_cast<float>(DEFAULT_RES_HEIGHT) / state.manual_dpi_scale;
     } else {
         state.logical_viewport_pos.x = 0;
         state.logical_viewport_pos.y = 0;
@@ -388,14 +383,14 @@ bool init(EmuEnvState &state, Config &cfg, const Root &root_paths) {
     #ifdef __LINUX__
     if (SDL_GetCurrentVideoDriver() && std::string(SDL_GetCurrentVideoDriver()) == "x11") {
         // X11 does not provide High DPI support, so manually set the High DPI scale
-        state.dpi_scale = fetch_x11_display_dpi();
-        if (state.dpi_scale > 1.0) {
-            state.use_manual_dpi_scaling = true;
+        state.manual_dpi_scale = fetch_x11_display_dpi();
+        if (state.manual_dpi_scale < 1.0) {
+            state.manual_dpi_scale = 1.0;
         }
     }
     #endif
 
-    state.window = WindowPtr(SDL_CreateWindow(window_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, state.use_manual_dpi_scaling ? DEFAULT_RES_WIDTH * state.dpi_scale : DEFAULT_RES_WIDTH, state.use_manual_dpi_scaling ? DEFAULT_RES_HEIGHT * state.dpi_scale : DEFAULT_RES_HEIGHT, window_type | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), SDL_DestroyWindow);
+    state.window = WindowPtr(SDL_CreateWindow(window_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DEFAULT_RES_WIDTH * state.manual_dpi_scale, DEFAULT_RES_HEIGHT * state.manual_dpi_scale, window_type | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI), SDL_DestroyWindow);
 
     if (!state.window) {
         LOG_ERROR("SDL failed to create window!");
