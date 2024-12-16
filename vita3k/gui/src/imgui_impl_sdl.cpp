@@ -129,7 +129,7 @@ IMGUI_API void ImGui_ImplSdl_Shutdown(ImGui_State *state) {
         SDL_FreeCursor(mouse_cursor);
     memset(state->mouse_cursors, 0, sizeof(state->mouse_cursors));
 }
-IMGUI_API void ImGui_ImplSdl_NewFrame(ImGui_State *state, float manual_scale) {
+IMGUI_API void ImGui_ImplSdl_NewFrame(ImGui_State *state) {
     ImGuiIO &io = ImGui::GetIO();
 
     // Setup display size (every frame to accommodate for window resizing)
@@ -137,7 +137,7 @@ IMGUI_API void ImGui_ImplSdl_NewFrame(ImGui_State *state, float manual_scale) {
     int display_w, display_h;
     SDL_GetWindowSize(state->window, &w, &h);
     ImGui_ImplSdl_GetDrawableSize(state, display_w, display_h);
-    io.DisplaySize = ImVec2((float)w / manual_scale, (float)h / manual_scale);
+    io.DisplaySize = ImVec2((float)w, (float)h);
     io.DisplayFramebufferScale = ImVec2(w > 0 ? ((float)display_w / w) : 0, h > 0 ? ((float)display_h / h) : 0);
 
     // Setup time step (we don't use SDL_GetTicks() because it is using millisecond resolution)
