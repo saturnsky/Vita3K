@@ -152,7 +152,7 @@ static void init_font(GuiState &gui, EmuEnvState &emuenv) {
     ImGuiIO &io = ImGui::GetIO();
 
     ImFontConfig mono_font_config{};
-    mono_font_config.SizePixels = 13.f * emuenv.manual_dpi_scale * emuenv.system_dpi_scale;
+    mono_font_config.SizePixels = 13.f * 3;
 
 #ifdef _WIN32
     constexpr auto monospaced_font_path = "C:\\Windows\\Fonts\\consola.ttf";
@@ -220,7 +220,7 @@ static void init_font(GuiState &gui, EmuEnvState &emuenv) {
         // Add fw font to imgui
 
         gui.fw_font = true;
-        font_config.SizePixels = 19.2f * emuenv.manual_dpi_scale * emuenv.system_dpi_scale;
+        font_config.SizePixels = 19.2f * 3;
 
         gui.vita_font = io.Fonts->AddFontFromFileTTF(fs_utils::path_to_utf8(latin_fw_font_path).c_str(), font_config.SizePixels, &font_config, latin_range);
         font_config.MergeMode = true;
@@ -234,11 +234,11 @@ static void init_font(GuiState &gui, EmuEnvState &emuenv) {
             io.Fonts->AddFontFromFileTTF(fs_utils::path_to_utf8(fw_font_path / "cn0.pvf").c_str(), font_config.SizePixels, &font_config, chinese_range);
         font_config.MergeMode = false;
 
-        large_font_config.SizePixels = 116.f * emuenv.manual_dpi_scale * emuenv.system_dpi_scale;
+        large_font_config.SizePixels = 116.f * 3;
         gui.large_font = io.Fonts->AddFontFromFileTTF(fs_utils::path_to_utf8(latin_fw_font_path).c_str(), large_font_config.SizePixels, &large_font_config, large_font_chars);
     } else {
         LOG_WARN("Could not find firmware font file at {}, install firmware fonts package to fix this.", latin_fw_font_path);
-        font_config.SizePixels = 22.f * emuenv.manual_dpi_scale * emuenv.system_dpi_scale;
+        font_config.SizePixels = 22.f * 3;
 
         // Set up default font path
         fs::path default_font_path = emuenv.static_assets_path / "data/fonts";
@@ -254,7 +254,7 @@ static void init_font(GuiState &gui, EmuEnvState &emuenv) {
                 io.Fonts->AddFontFromFileTTF(fs_utils::path_to_utf8(default_font_path / "SourceHanSansSC-Bold-Min.ttf").c_str(), font_config.SizePixels, &font_config, japanese_and_extra_ranges.Data);
             font_config.MergeMode = false;
 
-            large_font_config.SizePixels = 134.f * emuenv.manual_dpi_scale * emuenv.system_dpi_scale;
+            large_font_config.SizePixels = 134.f * 3;
             gui.large_font = io.Fonts->AddFontFromFileTTF(fs_utils::path_to_utf8(default_font_path / "mplus-1mn-bold.ttf").c_str(), large_font_config.SizePixels, &large_font_config, large_font_chars);
 
             LOG_INFO("Using default Vita3K font.");
