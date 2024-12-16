@@ -81,7 +81,10 @@ void update_viewport(EmuEnvState &state) {
     state.drawable_size.x = w;
     state.drawable_size.y = h;
 
-    state.dpi_scale = static_cast<float>(state.drawable_size.x) / state.window_size.x;
+    if (!state.use_manual_dpi_scaling) {
+        state.dpi_scale = static_cast<float>(state.drawable_size.x) / state.window_size.x;
+    }
+    ImGui::GetIO().FontGlobalScale = 1.f / state.dpi_scale;
 
     if (h > 0) {
         const float window_aspect = static_cast<float>(w) / h;
