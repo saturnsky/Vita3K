@@ -232,7 +232,6 @@ int main(int argc, char *argv[]) {
             run_execv(argv, emuenv);
         }
         gui::init(gui, emuenv);
-        app::update_viewport(emuenv);
     }
 
     if (cfg.content_path.has_value()) {
