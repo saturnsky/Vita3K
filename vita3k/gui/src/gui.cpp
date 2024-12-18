@@ -155,7 +155,7 @@ static void init_font(GuiState &gui, EmuEnvState &emuenv) {
     // Set max texture size
     int max_texture_size = emuenv.renderer->get_max_2d_texture_width();
     io.Fonts->TexDesiredWidth = max_texture_size;
-    io.Fonts->TexGlyphPadding = 3;
+    io.Fonts->TexGlyphPadding = 4;
 
     // 3.0 is sufficient for high-resolution displays, and 2.0 is enough for FHD displays.
     // Below that is for entry-level systems.

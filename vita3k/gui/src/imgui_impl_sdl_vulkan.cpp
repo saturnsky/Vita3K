@@ -594,15 +594,6 @@ bool IsExtensionSupported(vk::PhysicalDevice physicalDevice, const char *extensi
     return false;
 }
 
-// Function to choose appropriate filter
-vk::Filter ChooseBestFilter(vk::PhysicalDevice physicalDevice) {
-    if (IsExtensionSupported(physicalDevice, VK_EXT_FILTER_CUBIC_EXTENSION_NAME)) {
-        return vk::Filter::eLinear; // Use Cubic Filtering if supported
-    } else {
-        return vk::Filter::eLinear; // Fallback to Linear Filtering
-    }
-}
-
 // Default font downscale is too bad, need to generate mipmaps
 void GenerateMipmaps(vk::CommandBuffer cmd, vk::Image image, vk::Format format, int32_t width, int32_t height, uint32_t mip_levels, vk::PhysicalDevice physicalDevice) {
     vk::ImageMemoryBarrier barrier{};
@@ -615,8 +606,7 @@ void GenerateMipmaps(vk::CommandBuffer cmd, vk::Image image, vk::Format format, 
     int32_t mip_width = width;
     int32_t mip_height = height;
 
-    // Determine the best filter
-    vk::Filter chosen_filter = ChooseBestFilter(physicalDevice);
+    vk::Filter chosen_filter = vk::Filter::eLinear;
 
     for (uint32_t i = 1; i < mip_levels; i++) {
         barrier.subresourceRange.baseMipLevel = 0;
@@ -826,7 +816,8 @@ IMGUI_API bool ImGui_ImplSdlVulkan_CreateDeviceObjects(ImGui_VulkanState &state)
             .addressModeV = vk::SamplerAddressMode::eClampToBorder,
             .addressModeW = vk::SamplerAddressMode::eClampToBorder,
             .minLod = 0.0f,
-            .maxLod = 32.0f,
+            .maxLod = 4.0f,
+            .borderColor = vk::BorderColor::eFloatTransparentBlack,
         };
         state.FontSampler = vk_state.device.createSampler(info);
     }
