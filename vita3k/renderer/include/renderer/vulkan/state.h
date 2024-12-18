@@ -121,6 +121,7 @@ struct VKState : public renderer::State {
     int get_max_anisotropic_filtering() override;
     void set_anisotropic_filtering(int anisotropic_filtering) override;
     void set_async_compilation(bool enable) override;
+    int get_max_2d_texture_width() override;
 
     bool map_memory(MemState &mem, Ptr<void> address, uint32_t size) override;
     void unmap_memory(MemState &mem, Ptr<void> address) override;

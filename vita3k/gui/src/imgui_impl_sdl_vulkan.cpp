@@ -583,9 +583,93 @@ IMGUI_API void ImGui_ImplSdlVulkan_RenderDrawData(ImGui_VulkanState &state) {
     state.frame_timestamp++;
 }
 
+// Function to check if a Vulkan extension is supported
+bool IsExtensionSupported(vk::PhysicalDevice physicalDevice, const char *extensionName) {
+    auto extensions = physicalDevice.enumerateDeviceExtensionProperties();
+    for (const auto &ext : extensions) {
+        if (strcmp(ext.extensionName, extensionName) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Function to choose appropriate filter
+vk::Filter ChooseBestFilter(vk::PhysicalDevice physicalDevice) {
+    if (IsExtensionSupported(physicalDevice, VK_EXT_FILTER_CUBIC_EXTENSION_NAME)) {
+        return vk::Filter::eLinear; // Use Cubic Filtering if supported
+    } else {
+        return vk::Filter::eLinear; // Fallback to Linear Filtering
+    }
+}
+
+// Default font downscale is too bad, need to generate mipmaps
+void GenerateMipmaps(vk::CommandBuffer cmd, vk::Image image, vk::Format format, int32_t width, int32_t height, uint32_t mip_levels, vk::PhysicalDevice physicalDevice) {
+    vk::ImageMemoryBarrier barrier{};
+    barrier.image = image;
+    barrier.subresourceRange.aspectMask = vk::ImageAspectFlagBits::eColor;
+    barrier.subresourceRange.baseArrayLayer = 0;
+    barrier.subresourceRange.layerCount = 1;
+    barrier.subresourceRange.levelCount = 1;
+
+    int32_t mip_width = width;
+    int32_t mip_height = height;
+
+    // Determine the best filter
+    vk::Filter chosen_filter = ChooseBestFilter(physicalDevice);
+
+    for (uint32_t i = 1; i < mip_levels; i++) {
+        barrier.subresourceRange.baseMipLevel = 0;
+        barrier.oldLayout = vk::ImageLayout::eTransferDstOptimal;
+        barrier.newLayout = vk::ImageLayout::eTransferSrcOptimal;
+        barrier.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
+        barrier.dstAccessMask = vk::AccessFlagBits::eTransferRead;
+
+        cmd.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer,
+            vk::PipelineStageFlagBits::eTransfer,
+            {}, nullptr, nullptr, barrier);
+
+        int32_t current_mip_width = width >> i;
+        int32_t current_mip_height = height >> i;
+
+        vk::ImageBlit blit{
+            .srcSubresource = { vk::ImageAspectFlagBits::eColor, 0, 0, 1 },
+            .srcOffsets = std::array<vk::Offset3D, 2>{
+                vk::Offset3D{ 0, 0, 0 },
+                vk::Offset3D{ width, height, 1 }
+            },
+            .dstSubresource = { vk::ImageAspectFlagBits::eColor, i, 0, 1 },
+            .dstOffsets = std::array<vk::Offset3D, 2>{ vk::Offset3D{ 0, 0, 0 }, vk::Offset3D{ current_mip_width > 1 ? current_mip_width : 1, current_mip_height > 1 ? current_mip_height : 1, 1 } },
+        };
+
+        cmd.blitImage(image, vk::ImageLayout::eTransferSrcOptimal,
+            image, vk::ImageLayout::eTransferDstOptimal,
+            1, &blit, chosen_filter);
+
+        barrier.subresourceRange.baseMipLevel = i;
+        barrier.oldLayout = vk::ImageLayout::eTransferDstOptimal;
+        barrier.newLayout = vk::ImageLayout::eShaderReadOnlyOptimal;
+        barrier.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
+        barrier.dstAccessMask = vk::AccessFlagBits::eShaderRead;
+
+        cmd.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer,
+            vk::PipelineStageFlagBits::eFragmentShader,
+            {}, nullptr, nullptr, barrier);
+    }
+
+    barrier.subresourceRange.baseMipLevel = mip_levels - 1;
+    barrier.oldLayout = vk::ImageLayout::eTransferDstOptimal;
+    barrier.newLayout = vk::ImageLayout::eShaderReadOnlyOptimal;
+    barrier.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
+    barrier.dstAccessMask = vk::AccessFlagBits::eShaderRead;
+
+    cmd.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer, vk::PipelineStageFlagBits::eFragmentShader, {}, nullptr, nullptr, barrier);
+}
+
 IMGUI_API ImTextureID ImGui_ImplSdlVulkan_CreateTexture(ImGui_VulkanState &state, void *pixels, int width, int height, bool is_alpha) {
     auto *texture = new TextureState;
 
+    const uint32_t mip_levels = static_cast<uint32_t>(std::floor(std::log2(std::max(width, height))) + 1);
     const size_t buffer_size = width * height * (is_alpha ? 1 : 4);
 
     vk::BufferCreateInfo buffer_info{
@@ -611,11 +695,11 @@ IMGUI_API ImTextureID ImGui_ImplSdlVulkan_CreateTexture(ImGui_VulkanState &state
         .imageType = vk::ImageType::e2D,
         .format = format,
         .extent = vk::Extent3D{ static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1 },
-        .mipLevels = 1,
+        .mipLevels = mip_levels,
         .arrayLayers = 1,
         .samples = vk::SampleCountFlagBits::e1,
         .tiling = vk::ImageTiling::eOptimal,
-        .usage = vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled,
+        .usage = vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferSrc,
         .sharingMode = vk::SharingMode::eExclusive,
         .initialLayout = vk::ImageLayout::eUndefined
     };
@@ -682,6 +766,9 @@ IMGUI_API ImTextureID ImGui_ImplSdlVulkan_CreateTexture(ImGui_VulkanState &state
         1, &image_shader_read_only_barrier // Image Memory Barriers
     );
 
+    // Generate mipmaps
+    GenerateMipmaps(transfer_buffer, texture->image, vk::Format::eR8Unorm, width, height, mip_levels, vk_state.physical_device);
+
     vkutil::end_single_time_command(vk_state.device, vk_state.transfer_queue, vk_state.transfer_command_pool, transfer_buffer);
     vk_state.allocator.destroyBuffer(temp_buffer, temp_allocation);
 
@@ -735,11 +822,11 @@ IMGUI_API bool ImGui_ImplSdlVulkan_CreateDeviceObjects(ImGui_VulkanState &state)
             .magFilter = vk::Filter::eLinear,
             .minFilter = vk::Filter::eLinear,
             .mipmapMode = vk::SamplerMipmapMode::eLinear,
-            .addressModeU = vk::SamplerAddressMode::eRepeat,
-            .addressModeV = vk::SamplerAddressMode::eRepeat,
-            .addressModeW = vk::SamplerAddressMode::eRepeat,
-            .minLod = -1000,
-            .maxLod = 1000,
+            .addressModeU = vk::SamplerAddressMode::eClampToBorder,
+            .addressModeV = vk::SamplerAddressMode::eClampToBorder,
+            .addressModeW = vk::SamplerAddressMode::eClampToBorder,
+            .minLod = 0.0f,
+            .maxLod = 32.0f,
         };
         state.FontSampler = vk_state.device.createSampler(info);
     }

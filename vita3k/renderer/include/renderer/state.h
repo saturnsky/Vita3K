@@ -101,6 +101,7 @@ struct State {
     virtual int get_max_anisotropic_filtering() = 0;
     virtual void set_anisotropic_filtering(int anisotropic_filtering) = 0;
     virtual void set_async_compilation(bool enable) {}
+    virtual int get_max_2d_texture_width() = 0;
     void set_surface_sync_state(bool disable) {
         disable_surface_sync = disable;
     }
