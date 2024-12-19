@@ -27,6 +27,7 @@
 #include <io/functions.h>
 #include <kernel/state.h>
 #include <ngs/state.h>
+#include <gui/state.h>
 #include <renderer/state.h>
 
 #include <renderer/functions.h>
@@ -82,7 +83,7 @@ void update_viewport(EmuEnvState &state) {
     state.drawable_size.y = h;
 
     state.system_dpi_scale = static_cast<float>(state.drawable_size.x) / state.window_size.x;
-    ImGui::GetIO().FontGlobalScale = 1.f / 3.f * state.manual_dpi_scale;
+    ImGui::GetIO().FontGlobalScale = 1.f * state.manual_dpi_scale;
 
     if (h > 0) {
         const float window_aspect = static_cast<float>(w) / h;
@@ -134,6 +135,20 @@ void update_viewport(EmuEnvState &state) {
         state.drawable_viewport_pos.y = 0;
         state.drawable_viewport_size.x = 0;
         state.drawable_viewport_size.y = 0;
+    }
+
+    // Update nearest font level
+    float scale = state.gui_scale.y * state.system_dpi_scale * state.manual_dpi_scale;
+    state.current_font_level = 0;
+    for (int i = 0; i <= state.max_font_level; i++) {
+        if (i == state.max_font_level || scale <= FontScaleCandidates[i]) {
+            state.current_font_level = i;
+            break;
+        }
+        if (FontScaleCandidates[i] / scale > scale / FontScaleCandidates[i + 1]) {
+            state.current_font_level = i;
+            break;
+        }
     }
 }
 
