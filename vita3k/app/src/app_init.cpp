@@ -322,7 +322,17 @@ static float fetch_x11_display_dpi() {
 
     XCloseDisplay(display);
 
-    return dpi / 96 > 1 ? dpi / 96 : 1.0;
+    // If that failed, try the GDK_SCALE environment variable
+    if (dpi <= 0) {
+        const char *gdk_scale = getenv("GDK_SCALE");
+        if (gdk_scale) {
+            dpi = std::stoi(gdk_scale) * 96;
+        } else {
+            LOG_INFO("GDK_SCALE not found in environment");
+        }
+    }
+
+    return dpi > 96 ? dpi / 96 : 1.0;
 }
 #endif
 
