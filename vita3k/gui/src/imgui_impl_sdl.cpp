@@ -559,7 +559,7 @@ void ImGui_Texture::init(ImGui_State *new_state, void *data, int width, int heig
 }
 
 ImGui_Texture::operator bool() const {
-    return texture_id != nullptr;
+    return texture_id != 0;
 }
 
 ImGui_Texture::operator ImTextureID() const {
@@ -575,7 +575,7 @@ ImGui_Texture &ImGui_Texture::operator=(ImGui_Texture &&texture) noexcept {
     this->texture_id = texture.texture_id;
 
     texture.state = nullptr;
-    texture.texture_id = nullptr;
+    texture.texture_id = 0;
 
     return *this;
 }
@@ -588,7 +588,7 @@ ImGui_Texture::ImGui_Texture(ImGui_Texture &&texture) noexcept
     : state(texture.state)
     , texture_id(texture.texture_id) {
     texture.state = nullptr;
-    texture.texture_id = nullptr;
+    texture.texture_id = 0;
 }
 
 ImGui_Texture::~ImGui_Texture() {
