@@ -548,7 +548,7 @@ IMGUI_API void ImGui_ImplSdlVulkan_RenderDrawData(ImGui_VulkanState &state) {
                 // Bind DescriptorSet with font or user texture
                 TextureState *texture;
                 if (pcmd->TextureId)
-                    texture = static_cast<TextureState *>(pcmd->TextureId);
+                    texture = reinterpret_cast<TextureState *>(static_cast<intptr_t>(pcmd->TextureId));
                 else
                     texture = state.Font;
 
@@ -694,11 +694,11 @@ IMGUI_API ImTextureID ImGui_ImplSdlVulkan_CreateTexture(ImGui_VulkanState &state
 
     texture->image_view = vk_state.device.createImageView(font_view_info);
 
-    return texture;
+    return reinterpret_cast<ImTextureID>(texture);
 }
 
 IMGUI_API void ImGui_ImplSdlVulkan_DeleteTexture(ImGui_VulkanState &state, ImTextureID texture) {
-    auto texture_ptr = static_cast<TextureState *>(texture);
+    auto texture_ptr = reinterpret_cast<TextureState *>(static_cast<intptr_t>(texture));
     auto &vk_state = get_renderer(state);
 
     vk_state.device.waitIdle();
@@ -712,7 +712,7 @@ IMGUI_API void ImGui_ImplSdlVulkan_DeleteTexture(ImGui_VulkanState &state, ImTex
 IMGUI_API void ImGui_ImplSdlVulkan_InvalidateDeviceObjects(ImGui_VulkanState &state) {
     auto &vk_state = get_renderer(state);
 
-    ImGui_ImplSdlVulkan_DeleteTexture(state, state.Font);
+    ImGui_ImplSdlVulkan_DeleteTexture(state, reinterpret_cast<ImTextureID>(state.Font));
     ImGui_ImplSdlVulkan_DeletePipeline(state);
 
     vk_state.device.destroy(state.PipelineLayout);
@@ -796,7 +796,7 @@ IMGUI_API bool ImGui_ImplSdlVulkan_CreateDeviceObjects(ImGui_VulkanState &state)
         io.Fonts->GetTexDataAsAlpha8(&pixels, &width, &height);
 
         io.Fonts->TexID = ImGui_ImplSdlVulkan_CreateTexture(state, pixels, width, height, true);
-        state.Font = static_cast<TextureState *>(io.Fonts->TexID);
+        state.Font = reinterpret_cast<TextureState *>(static_cast<intptr_t>(io.Fonts->TexID));
 
         // reserve and remove the last descriptor set for the font
         state.Font->descriptor_set = state.DescriptorSets[TextureState::nb_descriptor_sets];

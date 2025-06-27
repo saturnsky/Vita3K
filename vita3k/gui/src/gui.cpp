@@ -771,7 +771,7 @@ ImTextureID load_image(GuiState &gui, const uint8_t *data, const int size) {
         nullptr, STBI_rgb_alpha);
 
     if (!img_data)
-        return nullptr;
+        return 0;
 
     const auto handle = ImGui_ImplSdl_CreateTexture(gui.imgui_state.get(), img_data, width, height);
     stbi_image_free(img_data);
