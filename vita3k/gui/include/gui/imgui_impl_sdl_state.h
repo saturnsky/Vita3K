@@ -66,5 +66,7 @@ public:
     ImGui_Texture &operator=(ImGui_Texture &&texture) noexcept;
     ImGui_Texture &operator=(const ImGui_Texture &texture) = delete;
 
+    operator ImTextureRef() const;
+
     ~ImGui_Texture();
 };
