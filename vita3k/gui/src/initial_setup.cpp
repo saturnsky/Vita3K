@@ -229,7 +229,7 @@ void draw_initial_setup(GuiState &gui, EmuEnvState &emuenv) {
         ImGui::SetCursorPosY((WINDOW_SIZE.y / 2.f) - ImGui::GetFontSize());
         TextCentered(lang["completed_setup"].c_str());
         ImGui::SetCursorPos(BIG_BUTTON_POS);
-        if (ImGui::Button(common["ok"].c_str(), BIG_BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_cross))) {
+        if (ImGui::Button(common["ok"].c_str(), BIG_BUTTON_SIZE) || ImGui::IsKeyPressed(ImGui_ImplSdl_ScancodeToImGuiKey(emuenv.cfg.keyboard_button_cross))) {
             emuenv.cfg.initial_setup = true;
             config::serialize_config(emuenv.cfg, emuenv.config_path);
         }
@@ -245,10 +245,10 @@ void draw_initial_setup(GuiState &gui, EmuEnvState &emuenv) {
 
     // Draw Button
     ImGui::SetCursorPos(BUTTON_POS);
-    if ((setup > SELECT_LANGUAGE) && ImGui::Button(lang["back"].c_str(), BUTTON_SIZE) || (setup > SELECT_LANGUAGE) && ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle)))
+    if ((setup > SELECT_LANGUAGE) && ImGui::Button(lang["back"].c_str(), BUTTON_SIZE) || (setup > SELECT_LANGUAGE) && ImGui::IsKeyPressed(ImGui_ImplSdl_ScancodeToImGuiKey(emuenv.cfg.keyboard_button_circle)))
         setup = (InitialSetup)(setup - 1);
     ImGui::SetCursorPos(ImVec2(display_size.x - BUTTON_SIZE.x - BUTTON_POS.x, BUTTON_POS.y));
-    if ((setup < FINISHED) && ImGui::Button(lang["next"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_cross))) {
+    if ((setup < FINISHED) && ImGui::Button(lang["next"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(ImGui_ImplSdl_ScancodeToImGuiKey(emuenv.cfg.keyboard_button_cross))) {
         setup = (InitialSetup)(setup + 1);
         config::serialize_config(emuenv.cfg, emuenv.config_path);
     }

@@ -514,10 +514,10 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", delete_str);
                 ImGui::PopTextWrapPos();
                 ImGui::SetCursorPos(ImVec2((POPUP_SIZE.x / 2) - (BUTTON_SIZE.x + (20.f * SCALE.x)), POPUP_SIZE.y - BUTTON_SIZE.y - (22.0f * SCALE.y)));
-                if (ImGui::Button(common["cancel"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle)))
+                if (ImGui::Button(common["cancel"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(ImGui_ImplSdl_ScancodeToImGuiKey(emuenv.cfg.keyboard_button_circle)))
                     delete_np_com_id.clear();
                 ImGui::SameLine(0, 20.f * SCALE.x);
-                if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_cross))) {
+                if (ImGui::Button(common["ok"].c_str(), BUTTON_SIZE) || ImGui::IsKeyPressed(ImGui_ImplSdl_ScancodeToImGuiKey(emuenv.cfg.keyboard_button_cross))) {
                     fs::remove_all(TROPHY_PATH / "conf" / delete_np_com_id);
                     fs::remove_all(TROPHY_PATH / "data" / delete_np_com_id);
                     const auto np_com_id_index = std::find_if(np_com_id_list.begin(), np_com_id_list.end(), [&](const NPComIdSort &np_com) {
@@ -769,7 +769,7 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
 
     // Back
     ImGui::SetCursorPos(ImVec2(8.f * SCALE.x, WINDOW_SIZE.y - (52.f * SCALE.y)));
-    if (ImGui::Button("<<", ImVec2(64.f * SCALE.x, 40.f * SCALE.y)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_circle))) {
+    if (ImGui::Button("<<", ImVec2(64.f * SCALE.x, 40.f * SCALE.y)) || ImGui::IsKeyPressed(ImGui_ImplSdl_ScancodeToImGuiKey(emuenv.cfg.keyboard_button_circle))) {
         if (!np_com_id_selected.empty()) {
             if (detail_np_com_id) {
                 detail_np_com_id = false;
@@ -799,7 +799,7 @@ void draw_trophy_collection(GuiState &gui, EmuEnvState &emuenv) {
     // Sort
     if (trophy_id_selected.empty() && !detail_np_com_id && (np_com_id_selected.empty() || !group_id_selected.empty())) {
         ImGui::SetCursorPos(ImVec2(WINDOW_SIZE.x - (70.f * SCALE.x), WINDOW_SIZE.y - (52.f * SCALE.y)));
-        if (ImGui::Button("...", ImVec2(64.f * SCALE.x, 40.f * SCALE.y)) || ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_triangle)))
+        if (ImGui::Button("...", ImVec2(64.f * SCALE.x, 40.f * SCALE.y)) || ImGui::IsKeyPressed(ImGui_ImplSdl_ScancodeToImGuiKey(emuenv.cfg.keyboard_button_triangle)))
             ImGui::OpenPopup("...");
         if (ImGui::BeginPopup("...", ImGuiWindowFlags_NoMove)) {
             ImGui::TextColored(GUI_COLOR_TEXT_TITLE, "%s", lang["sort"].c_str());
