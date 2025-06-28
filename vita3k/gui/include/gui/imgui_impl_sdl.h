@@ -19,6 +19,7 @@
 
 #include <emuenv/window.h>
 #include <gui/imgui_impl_sdl_state.h>
+#include <imgui.h>
 
 union SDL_Event;
 struct SDL_Window;
@@ -37,3 +38,6 @@ IMGUI_API void ImGui_ImplSdl_DeleteTexture(ImGui_State *state, ImTextureID textu
 // Use if you want to reset your rendering device without losing ImGui state.
 IMGUI_API void ImGui_ImplSdl_InvalidateDeviceObjects(ImGui_State *state);
 IMGUI_API bool ImGui_ImplSdl_CreateDeviceObjects(ImGui_State *state);
+
+// SDL to ImGui key conversion utilitiy (For ImGui 1.91.5+)
+IMGUI_API ImGuiKey ImGui_ImplSdl_ScancodeToImGuiKey(int scancode);

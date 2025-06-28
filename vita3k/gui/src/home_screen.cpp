@@ -964,7 +964,7 @@ void draw_home_screen(GuiState &gui, EmuEnvState &emuenv) {
             ImVec2(ARROW_UP_CENTER.x + (20.f * VIEWPORT_SCALE.x), ARROW_UP_CENTER.y + (16.f * VIEWPORT_SCALE.y)), ARROW_COLOR);
         ImGui::SetCursorPos(ImVec2(ARROW_SELECT_WIDTH_POS, ARROW_UP_HEIGHT_POS - SELECTABLE_SIZE.y));
         if (ImGui::Selectable("##upp", false, ImGuiSelectableFlags_None, SELECTABLE_SIZE)
-            || (!ImGui::GetIO().WantTextInput && ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_leftstick_up)))) {
+            || (!ImGui::GetIO().WantTextInput && ImGui::IsKeyPressed(ImGui_ImplSdl_ScancodeToImGuiKey(emuenv.cfg.keyboard_leftstick_up)))) {
             gui.is_nav_button = false;
             scroll_type = 1;
         }
@@ -979,7 +979,7 @@ void draw_home_screen(GuiState &gui, EmuEnvState &emuenv) {
             ImVec2(ARROW_CENTER.x + (16.f * VIEWPORT_SCALE.x), ARROW_CENTER.y),
             ImVec2(ARROW_CENTER.x - (16.f * VIEWPORT_SCALE.x), ARROW_CENTER.y + (20.f * VIEWPORT_SCALE.y)), ARROW_COLOR);
         ImGui::SetCursorPos(ImVec2(ARROW_SELECT_WIDTH_POS, ARROW_CENTER_HEIGHT_POS - SELECTABLE_SIZE.y));
-        if (!gui.vita_area.app_close && (ImGui::Selectable("##right", false, ImGuiSelectableFlags_None, SELECTABLE_SIZE) || (!ImGui::GetIO().WantTextInput && ImGui::IsKeyReleased(static_cast<ImGuiKey>(emuenv.cfg.keyboard_button_r1))))) {
+        if (!gui.vita_area.app_close && (ImGui::Selectable("##right", false, ImGuiSelectableFlags_None, SELECTABLE_SIZE) || (!ImGui::GetIO().WantTextInput && ImGui::IsKeyReleased(ImGui_ImplSdl_ScancodeToImGuiKey(emuenv.cfg.keyboard_button_r1))))) {
             last_time["start"] = 0;
             ++gui.live_area_app_current_open;
             gui.vita_area.home_screen = false;
@@ -997,7 +997,7 @@ void draw_home_screen(GuiState &gui, EmuEnvState &emuenv) {
             ImVec2(ARROW_DOWN_CENTER.x - (20.f * VIEWPORT_SCALE.x), ARROW_DOWN_CENTER.y - (16.f * VIEWPORT_SCALE.y)), ARROW_COLOR);
         ImGui::SetCursorPos(ImVec2(ARROW_SELECT_WIDTH_POS, ARROW_DOWN_HEIGHT_POS - SELECTABLE_SIZE.y));
         if (ImGui::Selectable("##down", false, ImGuiSelectableFlags_None, SELECTABLE_SIZE)
-            || (!ImGui::GetIO().WantTextInput && ImGui::IsKeyPressed(static_cast<ImGuiKey>(emuenv.cfg.keyboard_leftstick_down)))) {
+            || (!ImGui::GetIO().WantTextInput && ImGui::IsKeyPressed(ImGui_ImplSdl_ScancodeToImGuiKey(emuenv.cfg.keyboard_leftstick_down)))) {
             gui.is_nav_button = false;
             scroll_type = -1;
         }
