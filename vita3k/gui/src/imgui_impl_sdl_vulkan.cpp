@@ -549,8 +549,8 @@ IMGUI_API void ImGui_ImplSdlVulkan_RenderDrawData(ImGui_VulkanState &state) {
 
                 // Bind DescriptorSet with font or user texture
                 TextureState *texture;
-                if (pcmd->TextureId)
-                    texture = reinterpret_cast<TextureState *>(static_cast<intptr_t>(pcmd->TextureId));
+                if (pcmd->GetTexID())
+                    texture = reinterpret_cast<TextureState *>(static_cast<intptr_t>(pcmd->GetTexID()));
                 else
                     texture = state.Font;
 
@@ -798,7 +798,7 @@ IMGUI_API bool ImGui_ImplSdlVulkan_CreateDeviceObjects(ImGui_VulkanState &state)
         io.Fonts->GetTexDataAsAlpha8(&pixels, &width, &height);
 
         io.Fonts->TexID = ImGui_ImplSdlVulkan_CreateTexture(state, pixels, width, height, true);
-        state.Font = reinterpret_cast<TextureState *>(static_cast<intptr_t>(io.Fonts->TexID));
+        state.Font = reinterpret_cast<TextureState *>(static_cast<intptr_t>(io.Fonts->TexRef.GetTexID()));
 
         // reserve and remove the last descriptor set for the font
         state.Font->descriptor_set = state.DescriptorSets[TextureState::nb_descriptor_sets];

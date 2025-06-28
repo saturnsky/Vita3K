@@ -136,20 +136,6 @@ void update_viewport(EmuEnvState &state) {
         state.drawable_viewport_size.x = 0;
         state.drawable_viewport_size.y = 0;
     }
-
-    // Update nearest font level
-    float scale = state.gui_scale.y * state.system_dpi_scale * state.manual_dpi_scale;
-    state.current_font_level = 0;
-    for (int i = 0; i <= state.max_font_level; i++) {
-        if (i == state.max_font_level || scale <= FontScaleCandidates[i]) {
-            state.current_font_level = i;
-            break;
-        }
-        if (FontScaleCandidates[i] / scale > scale / FontScaleCandidates[i + 1]) {
-            state.current_font_level = i;
-            break;
-        }
-    }
 }
 
 void init_paths(Root &root_paths) {

@@ -678,6 +678,10 @@ ImGui_Texture::operator ImTextureID() const {
     return texture_id;
 }
 
+ImGui_Texture::operator ImTextureRef() const {
+    return ImTextureRef(texture_id);
+}
+
 bool ImGui_Texture::operator==(const ImGui_Texture &texture) {
     return texture_id == texture.texture_id;
 }
