@@ -81,9 +81,6 @@ void update_viewport(EmuEnvState &state) {
     state.drawable_size.x = w;
     state.drawable_size.y = h;
 
-    state.system_dpi_scale = static_cast<float>(state.drawable_size.x) / state.window_size.x;
-    ImGui::GetIO().FontGlobalScale = 1.f * state.manual_dpi_scale;
-
     if (h > 0) {
         const float window_aspect = static_cast<float>(w) / h;
         const float vita_aspect = static_cast<float>(DEFAULT_RES_WIDTH) / DEFAULT_RES_HEIGHT;
@@ -136,6 +133,9 @@ void update_viewport(EmuEnvState &state) {
         state.drawable_viewport_size.x = 0;
         state.drawable_viewport_size.y = 0;
     }
+
+    // Update font scale to include both manual_dpi_scale and gui_scale
+    ImGui::GetStyle().FontScaleMain = state.manual_dpi_scale * state.gui_scale.x;
 }
 
 void init_paths(Root &root_paths) {
