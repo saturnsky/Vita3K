@@ -333,7 +333,7 @@ IMGUI_API ImGui_GLState *ImGui_ImplSdlGL3_Init(renderer::State *renderer, SDL_Wi
 
     // Query and store the max texture size
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, &state->max_texture_size);
-    
+
     // Set texture max size in platform IO
     ImGuiPlatformIO &platform_io = ImGui::GetPlatformIO();
     platform_io.Renderer_TextureMaxWidth = platform_io.Renderer_TextureMaxHeight = state->max_texture_size;
@@ -344,7 +344,7 @@ IMGUI_API ImGui_GLState *ImGui_ImplSdlGL3_Init(renderer::State *renderer, SDL_Wi
 void ImGui_ImplSdlGL3_Shutdown(ImGui_GLState &state) {
     // Destroy OpenGL objects
     ImGui_ImplSdlGL3_InvalidateDeviceObjects(state);
-    
+
     // Clear backend flags
     ImGuiIO &io = ImGui::GetIO();
     io.BackendFlags &= ~ImGuiBackendFlags_RendererHasTextures;

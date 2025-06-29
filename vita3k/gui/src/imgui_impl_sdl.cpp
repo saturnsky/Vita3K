@@ -595,9 +595,7 @@ IMGUI_API void ImGui_ImplSdl_UpdateTexture(ImGui_State *state, ImTextureData *te
         return ImGui_ImplSdlGL3_UpdateTexture(dynamic_cast<ImGui_GLState &>(*state), tex);
 
     case renderer::Backend::Vulkan:
-        // TODO: Implement Vulkan texture update
-        LOG_ERROR("Vulkan texture update not yet implemented");
-        break;
+        return ImGui_ImplSdlVulkan_UpdateTexture(dynamic_cast<ImGui_VulkanState &>(*state), tex);
     }
 }
 
