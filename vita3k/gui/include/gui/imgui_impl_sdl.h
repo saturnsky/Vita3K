@@ -34,6 +34,9 @@ IMGUI_API bool ImGui_ImplSdl_ProcessEvent(ImGui_State *state, SDL_Event *event);
 IMGUI_API ImTextureID ImGui_ImplSdl_CreateTexture(ImGui_State *state, void *data, int width, int height);
 IMGUI_API void ImGui_ImplSdl_DeleteTexture(ImGui_State *state, ImTextureID texture);
 
+// (Advanced) Use e.g. if you need to precisely control the timing of texture updates (e.g. for staged rendering), by setting ImDrawData::Textures = NULL to handle this manually.
+IMGUI_API void ImGui_ImplSdl_UpdateTexture(ImGui_State *state, ImTextureData *tex);
+
 // Use if you want to reset your rendering device without losing ImGui state.
 IMGUI_API void ImGui_ImplSdl_InvalidateDeviceObjects(ImGui_State *state);
 IMGUI_API bool ImGui_ImplSdl_CreateDeviceObjects(ImGui_State *state);
