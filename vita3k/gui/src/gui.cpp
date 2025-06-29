@@ -287,12 +287,15 @@ static void init_font(GuiState &gui, EmuEnvState &emuenv) {
             gui.large_font = io.Fonts->AddFontFromFileTTF(fs_utils::path_to_utf8(default_font_path / "mplus-1mn-bold.ttf").c_str(), large_font_config.SizePixels, &large_font_config, large_font_chars);
 
             LOG_INFO("Using default Vita3K font.");
-        } else
+        } else {
             LOG_WARN("Could not find default Vita3K font at {}, using default ImGui font.", default_font_path);
         }
+    }
 
     // Build font atlas loaded and upload to GPU
-    io.Fonts->Build();
+    if (!(io.BackendFlags & ImGuiBackendFlags_RendererHasTextures)) {
+        io.Fonts->Build();
+    }
 }
 
 vfs::FileBuffer init_default_icon(GuiState &gui, EmuEnvState &emuenv) {
