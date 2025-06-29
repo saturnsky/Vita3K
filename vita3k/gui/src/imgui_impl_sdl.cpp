@@ -589,6 +589,18 @@ IMGUI_API void ImGui_ImplSdl_RenderDrawData(ImGui_State *state) {
     }
 }
 
+IMGUI_API void ImGui_ImplSdl_UpdateTexture(ImGui_State *state, ImTextureData *tex) {
+    switch (state->renderer->current_backend) {
+    case renderer::Backend::OpenGL:
+        return ImGui_ImplSdlGL3_UpdateTexture(dynamic_cast<ImGui_GLState &>(*state), tex);
+
+    case renderer::Backend::Vulkan:
+        // TODO: Implement Vulkan texture update
+        LOG_ERROR("Vulkan texture update not yet implemented");
+        break;
+    }
+}
+
 IMGUI_API void ImGui_ImplSdl_GetDrawableSize(ImGui_State *state, int &width, int &height) {
     // Does this even matter?
     switch (state->renderer->current_backend) {
