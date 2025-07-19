@@ -63,7 +63,7 @@ void draw_info_message(GuiState &gui, EmuEnvState &emuenv) {
         ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * SCALE.x);
         ImGui::BeginChild("##info", WINDOW_SIZE, ImGuiChildFlags_Borders, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoDecoration);
         const auto &title = gui.info_message.title;
-        ImGui::SetWindowFontScale(RES_SCALE.x);
+        ImGui::SetWindowFontScale(1.f);
         TextColoredCentered(GUI_COLOR_TEXT_TITLE, title.c_str());
         ImGui::Spacing();
         ImGui::Separator();

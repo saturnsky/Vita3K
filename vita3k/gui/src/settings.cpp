@@ -272,7 +272,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
     else
         draw_list->AddRectFilled(VIEWPORT_POS, BG_POS_MAX, IM_COL32(36.f, 120.f, 12.f, 255.f), 0.f, ImDrawFlags_RoundCornersAll);
 
-    ImGui::SetWindowFontScale(1.6f * RES_SCALE.x);
+    ImGui::SetWindowFontScale(1.6f);
     const auto title_size_str = ImGui::CalcTextSize(title.c_str(), 0, false, SIZE_LIST.x);
     ImGui::PushTextWrapPos(((WINDOW_SIZE.x - SIZE_LIST.x) / 2.f) + SIZE_LIST.x);
     ImGui::SetCursorPos(ImVec2((WINDOW_SIZE.x / 2.f) - (title_size_str.x / 2.f), (35.f * SCALE.y) - (title_size_str.y / 2.f)));
@@ -288,13 +288,13 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
     if (settings_menu == SettingsMenu::THEME_BACKGROUND) {
         // Search Bar
         if ((menu == Menu::THEME) && selected.empty()) {
-            ImGui::SetWindowFontScale(1.2f * RES_SCALE.x);
+            ImGui::SetWindowFontScale(1.2f);
             const auto search_size = ImGui::CalcTextSize(common["search"].c_str());
             ImGui::SetCursorPos(ImVec2(WINDOW_SIZE.x - (220.f * SCALE.x) - search_size.x, (35.f * SCALE.y) - (search_size.y / 2.f)));
             ImGui::TextColored(GUI_COLOR_TEXT, "%s", common["search"].c_str());
             ImGui::SameLine();
             search_bar.Draw("##search_bar", 200 * SCALE.x);
-            ImGui::SetWindowFontScale(1.6f * RES_SCALE.x);
+            ImGui::SetWindowFontScale(1.6f);
 
             // Draw Scroll Arrow
             const auto ARROW_SIZE = ImVec2(50.f * SCALE.x, 60.f * SCALE.y);
@@ -487,7 +487,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                     ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * SCALE.x);
                     ImGui::BeginChild("##delete_theme_popup", POPUP_SIZE, ImGuiChildFlags_Borders, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
                     ImGui::SetCursorPos(ImVec2(48.f * SCALE.x, 28.f * SCALE.y));
-                    ImGui::SetWindowFontScale(1.6f * RES_SCALE.x);
+                    ImGui::SetWindowFontScale(1.6f);
                     ImGui::Image(gui.themes_preview[selected][PACKAGE], SIZE_MINI_PACKAGE);
                     ImGui::SameLine(0, 22.f * SCALE.x);
                     const auto CALC_TITLE = ImGui::CalcTextSize(themes_info[selected].title.c_str(), nullptr, false, POPUP_SIZE.x - SIZE_MINI_PACKAGE.x - (70.f * SCALE.x)).y / 2.f;
@@ -769,7 +769,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
             ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.f, 0.5f));
             ImGui::Columns(2, nullptr, false);
             ImGui::SetColumnWidth(0, 30.f * SCALE.x);
-            ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
+            ImGui::SetWindowFontScale(1.4f);
             if (menu == Menu::DATE_FORMAT) {
                 const auto get_date_format_sting = [&](SceSystemParamDateFormat date_format) {
                     std::string date_format_str;
@@ -883,7 +883,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
                 ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.f, 0.5f));
                 ImGui::Columns(2, nullptr, false);
                 ImGui::SetColumnWidth(0, 30.f * SCALE.x);
-                ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
+                ImGui::SetWindowFontScale(1.4f);
                 for (const auto &sys_lang : LIST_SYS_LANG) {
                     ImGui::PushID(sys_lang.first);
                     const auto is_current_lang = emuenv.cfg.sys_lang == sys_lang.first;
@@ -1020,7 +1020,7 @@ void draw_settings(GuiState &gui, EmuEnvState &emuenv) {
     ImGui::PopStyleVar();
 
     // Back
-    ImGui::SetWindowFontScale(1.2f * RES_SCALE.x);
+    ImGui::SetWindowFontScale(1.2f);
     ImGui::SetCursorPos(ImVec2(6.f * SCALE.x, WINDOW_SIZE.y - (52.f * SCALE.y)));
     if (ImGui::Button("<<", ImVec2(64.f * SCALE.x, 40.f * SCALE.y)) || ImGui::IsKeyPressed(ImGui_ImplSdl_ScancodeToImGuiKey(emuenv.cfg.keyboard_button_circle))) {
         if (settings_menu != SettingsMenu::SELECT) {

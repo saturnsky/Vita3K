@@ -297,7 +297,7 @@ void draw_ime(Ime &ime, EmuEnvState &emuenv) {
     ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * SCALE.x);
     ImGui::PushStyleColor(ImGuiCol_Button, GUI_COLOR_TEXT);
     ImGui::PushStyleColor(ImGuiCol_Text, GUI_COLOR_TEXT_BLACK);
-    ImGui::SetWindowFontScale(RES_SCALE.x);
+    ImGui::SetWindowFontScale(1.f);
     if (numeric_pad) {
         ImGui::SetCursorPosX(MARGE_BORDER);
         ImGui::PushStyleVar(ImGuiStyleVar_GrabMinSize, 62.f * SCALE.y);

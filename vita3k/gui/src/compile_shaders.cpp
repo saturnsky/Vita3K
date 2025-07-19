@@ -39,7 +39,7 @@ void draw_pre_compiling_shaders_progress(GuiState &gui, EmuEnvState &emuenv, con
     ImGui::SetNextWindowBgAlpha(0.9f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 12.f);
     ImGui::Begin("##shaders_pre_compile", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_AlwaysAutoResize);
-    ImGui::SetWindowFontScale(1.1f * RES_SCALE.x);
+    ImGui::SetWindowFontScale(1.1f);
 
     // Check if icon exist
     if (gui.app_selector.user_apps_icon.contains(emuenv.io.app_path)) {

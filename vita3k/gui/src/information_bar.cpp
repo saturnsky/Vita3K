@@ -424,7 +424,7 @@ static void draw_notice_info(GuiState &gui, EmuEnvState &emuenv) {
         ImGui::BeginChild("##notice_info_child", POPUP_SIZE, ImGuiChildFlags_Borders, ImGuiWindowFlags_NoSavedSettings);
         auto &lang = gui.lang.indicator;
         if (notice_info.empty()) {
-            ImGui::SetWindowFontScale(1.2f * RES_SCALE.x);
+            ImGui::SetWindowFontScale(1.2f);
             const auto no_notif = lang["no_notif"].c_str();
             const auto calc_text = ImGui::CalcTextSize(no_notif);
             ImGui::SetCursorPos(ImVec2((POPUP_SIZE.x / 2.f) - (calc_text.x / 2.f), (POPUP_SIZE.y / 2.f) - (calc_text.y / 2.f)));
@@ -468,11 +468,11 @@ static void draw_notice_info(GuiState &gui, EmuEnvState &emuenv) {
                 ImGui::PopStyleColor(3);
                 ImGui::PopID();
                 ImGui::NextColumn();
-                ImGui::SetWindowFontScale(1.3f * RES_SCALE.x);
+                ImGui::SetWindowFontScale(1.3f);
                 ImGui::SetCursorPosY(ImGui::GetCursorPosY() + (14.f * SCALE.y));
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", notice.name.c_str());
                 ImGui::Spacing();
-                ImGui::SetWindowFontScale(0.9f * RES_SCALE.x);
+                ImGui::SetWindowFontScale(0.9f);
                 ImGui::TextColored(GUI_COLOR_TEXT, "%s", notice.msg.c_str());
                 const auto notice_time = get_notice_time(gui, emuenv, notice.time);
                 const auto notice_time_size = ImGui::CalcTextSize(notice_time.c_str());
@@ -490,7 +490,7 @@ static void draw_notice_info(GuiState &gui, EmuEnvState &emuenv) {
             const auto DELETE_POPUP_SIZE = ImVec2(756.0f * SCALE.x, 436.0f * SCALE.y);
             const auto BUTTON_SIZE = ImVec2(320.f * SCALE.x, 46.f * SCALE.y);
 
-            ImGui::SetWindowFontScale(1.f * RES_SCALE.x);
+            ImGui::SetWindowFontScale(1.f);
             ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * SCALE.x);
             ImGui::SetCursorPos(ImVec2(VIEWPORT_SIZE.x - (70.f * SCALE.x), VIEWPORT_SIZE.y - (52.f * SCALE.y)));
             if (ImGui::Button("...", ImVec2(64.f * SCALE.x, 40.f * SCALE.y)) || ImGui::IsKeyPressed(ImGui_ImplSdl_ScancodeToImGuiKey(emuenv.cfg.keyboard_button_triangle)))
@@ -502,7 +502,7 @@ static void draw_notice_info(GuiState &gui, EmuEnvState &emuenv) {
                 ImGui::SetNextWindowSize(DELETE_POPUP_SIZE, ImGuiCond_Always);
                 ImGui::SetNextWindowPos(ImVec2(VIEWPORT_POS.x + (VIEWPORT_SIZE.x / 2.f) - (DELETE_POPUP_SIZE.x / 2.f), VIEWPORT_POS.y + (VIEWPORT_SIZE.y / 2.f) - (DELETE_POPUP_SIZE.y / 2.f)));
                 if (ImGui::BeginPopupModal("Delete All", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings)) {
-                    ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
+                    ImGui::SetWindowFontScale(1.4f);
                     auto &common = emuenv.common_dialog.lang.common;
                     ImGui::SetCursorPosY((DELETE_POPUP_SIZE.y / 2.f) - (46.f * SCALE.y));
                     TextColoredCentered(GUI_COLOR_TEXT, lang["notif_deleted"].c_str());

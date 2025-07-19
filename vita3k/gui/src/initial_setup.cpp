@@ -104,14 +104,14 @@ void draw_initial_setup(GuiState &gui, EmuEnvState &emuenv) {
     ImGui::SetNextWindowBgAlpha(0.0f);
 
     ImGui::BeginChild("##window_box", WINDOW_SIZE, ImGuiChildFlags_Borders, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
-    ImGui::SetWindowFontScale(1.6f * RES_SCALE.x);
+    ImGui::SetWindowFontScale(1.6f);
     const auto SELECT_COLOR = ImVec4(0.23f, 0.68f, 0.95f, 0.60f);
     const auto SELECT_COLOR_HOVERED = ImVec4(0.23f, 0.68f, 0.99f, 0.80f);
     const auto SELECT_COLOR_ACTIVE = ImVec4(0.23f, 0.68f, 1.f, 1.f);
 
     ImGui::SetCursorPosY((47 * SCALE.y) - (ImGui::GetFontSize() / 2.f));
     TextCentered(title_str.c_str());
-    ImGui::SetWindowFontScale(1.4f * RES_SCALE.x);
+    ImGui::SetWindowFontScale(1.4f);
     ImGui::SetCursorPosY(94.f * SCALE.y);
     ImGui::Separator();
     switch (setup) {
@@ -197,7 +197,7 @@ void draw_initial_setup(GuiState &gui, EmuEnvState &emuenv) {
         if (ImGui::Button(lang["install_firmware_file"].c_str(), BIG_BUTTON_SIZE))
             gui.file_menu.firmware_install_dialog = true;
         if (gui.file_menu.firmware_install_dialog) {
-            ImGui::SetWindowFontScale(RES_SCALE.x);
+            ImGui::SetWindowFontScale(1.f);
             draw_firmware_install_dialog(gui, emuenv);
         }
         break;
@@ -241,7 +241,7 @@ void draw_initial_setup(GuiState &gui, EmuEnvState &emuenv) {
     ImGui::EndChild();
     ImGui::PopStyleVar(2);
     ImGui::PopStyleColor();
-    ImGui::SetWindowFontScale(1.5f * RES_SCALE.x);
+    ImGui::SetWindowFontScale(1.5f);
 
     // Draw Button
     ImGui::SetCursorPos(BUTTON_POS);

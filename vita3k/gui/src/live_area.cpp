@@ -870,7 +870,7 @@ void draw_live_area_screen(GuiState &gui, EmuEnvState &emuenv) {
                 }
 
                 const auto size_text_scale = str_tag.size != 0 ? str_tag.size / 19.2f : 1.f;
-                ImGui::SetWindowFontScale(size_text_scale * RES_SCALE.x);
+                ImGui::SetWindowFontScale(size_text_scale);
 
                 // Calculate text pixel size
                 ImVec2 calc_text_size;
@@ -1038,12 +1038,12 @@ void draw_live_area_screen(GuiState &gui, EmuEnvState &emuenv) {
                 if (liveitem[app_path][frame.id]["text"]["word-wrap"].second != "off")
                     ImGui::PopTextWrapPos();
                 ImGui::EndChild();
-                ImGui::SetWindowFontScale(RES_SCALE.x);
+                ImGui::SetWindowFontScale(1.f);
             }
         }
     }
 
-    ImGui::SetWindowFontScale(RES_SCALE.x);
+    ImGui::SetWindowFontScale(1.f);
     const auto default_font_scale = (25.f * emuenv.manual_dpi_scale) * (ImGui::GetFontSize() / (19.2f * emuenv.manual_dpi_scale));
     const auto font_size_scale = default_font_scale / ImGui::GetFontSize();
 

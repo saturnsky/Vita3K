@@ -231,7 +231,7 @@ void draw_manual(GuiState &gui, EmuEnvState &emuenv) {
     }
 
     // Set window font scale for buttons
-    ImGui::SetWindowFontScale(RES_SCALE.x);
+    ImGui::SetWindowFontScale(1.f);
 
     // Hide button when right click is pressed on mouse
     if (!ImGui::IsAnyItemHovered() && ImGui::IsMouseClicked(0))

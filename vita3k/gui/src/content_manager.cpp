@@ -267,7 +267,7 @@ void draw_content_manager(GuiState &gui, EmuEnvState &emuenv) {
     else
         draw_list->AddRectFilled(VIEWPORT_POS, VIEWPORT_POS_MAX, IM_COL32(53.f, 54.f, 70.f, 255.f), 0.f, ImDrawFlags_RoundCornersAll);
 
-    ImGui::SetWindowFontScale(1.5f * RES_SCALE.x);
+    ImGui::SetWindowFontScale(1.5f);
 
     auto &lang = gui.lang.content_manager;
     auto &application = lang.application;
@@ -384,7 +384,7 @@ void draw_content_manager(GuiState &gui, EmuEnvState &emuenv) {
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10.f * SCALE.x);
             ImGui::BeginChild("##app_delete_child", POPUP_SIZE, ImGuiChildFlags_Borders, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings);
             ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10.f * SCALE.x);
-            ImGui::SetWindowFontScale(1.6f * RES_SCALE.x);
+            ImGui::SetWindowFontScale(1.6f);
             ImGui::SetCursorPos(ImVec2(52.f * SCALE.x, 80.f * SCALE.y));
             ImGui::PushTextWrapPos(POPUP_SIZE.x);
             ImGui::TextColored(GUI_COLOR_TEXT, "%s", menu == "app" ? application["delete"].c_str() : saved_data["delete"].c_str());
@@ -559,7 +559,7 @@ void draw_content_manager(GuiState &gui, EmuEnvState &emuenv) {
 
     ImGui::EndChild();
 
-    ImGui::SetWindowFontScale(1.2f * RES_SCALE.x);
+    ImGui::SetWindowFontScale(1.2f);
     ImGui::SetCursorPos(ImVec2(10.f * SCALE.x, WINDOW_SIZE.y - (56.f * SCALE.y)));
     const auto is_empty = ((menu == "app") && gui.app_selector.user_apps.empty()) || ((menu == "save") && save_data_list.empty());
     if (menu.empty() || (menu == "info") || is_empty) {
@@ -575,7 +575,7 @@ void draw_content_manager(GuiState &gui, EmuEnvState &emuenv) {
                 close_system_app(gui, emuenv);
         }
     } else {
-        ImGui::SetWindowFontScale(1.5f * RES_SCALE.x);
+        ImGui::SetWindowFontScale(1.5f);
 
         // Draw the bottom band
         draw_list->AddRectFilled(ImVec2(VIEWPORT_POS.x, VIEWPORT_POS.y + (482.f * SCALE.y)), VIEWPORT_POS_MAX, IM_COL32(39.f, 42.f, 49.f, 255.f), 0.f, ImDrawFlags_RoundCornersAll);
@@ -588,7 +588,7 @@ void draw_content_manager(GuiState &gui, EmuEnvState &emuenv) {
             }
         }
         const auto state = std::any_of(std::begin(contents_selected), std::end(contents_selected), [&](const auto &c) { return !c.second; });
-        ImGui::SetWindowFontScale(1.2f * RES_SCALE.x);
+        ImGui::SetWindowFontScale(1.2f);
         ImGui::SetCursorPos(ImVec2(WINDOW_SIZE.x - (450.f * SCALE.x), WINDOW_SIZE.y - (56.f * SCALE.y)));
         if (ImGui::Button(state ? common["select_all"].c_str() : lang.main["clear_all"].c_str(), ImVec2(224.f * SCALE.x, 44.f * SCALE.y))) {
             for (auto &content : contents_selected) {
@@ -600,7 +600,7 @@ void draw_content_manager(GuiState &gui, EmuEnvState &emuenv) {
         }
         const auto is_enable = std::any_of(std::begin(contents_selected), std::end(contents_selected), [&](const auto &cs) { return cs.second; });
         ImGui::SameLine();
-        ImGui::SetWindowFontScale(1.5f * RES_SCALE.x);
+        ImGui::SetWindowFontScale(1.5f);
         ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.5f));
         if (is_enable ? ImGui::Button(common["delete"].c_str(), ImVec2(202.f * SCALE.x, 44.f * SCALE.y)) && get_size_selected_contents(gui, emuenv) : ImGui::Selectable(common["delete"].c_str(), false, ImGuiSelectableFlags_Disabled, ImVec2(194.f * SCALE.x, 36.f * SCALE.y)))
             popup = true;
