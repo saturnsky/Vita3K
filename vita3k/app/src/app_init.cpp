@@ -63,7 +63,7 @@ void update_viewport(EmuEnvState &state) {
 
     state.system_dpi_scale = SDL_GetWindowPixelDensity(state.window.get());
     state.manual_dpi_scale = SDL_GetDisplayContentScale(SDL_GetDisplayForWindow(state.window.get()));
-    ImGui::GetIO().FontGlobalScale = 1.f * state.manual_dpi_scale;
+    ImGui::GetStyle().FontScaleMain = state.manual_dpi_scale;
 
     if (h > 0) {
         const float window_aspect = static_cast<float>(w) / h;
