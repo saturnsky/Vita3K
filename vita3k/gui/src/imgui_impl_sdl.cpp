@@ -601,18 +601,7 @@ IMGUI_API void ImGui_ImplSdl_UpdateTexture(ImGui_State *state, ImTextureData *te
 
 IMGUI_API void ImGui_ImplSdl_GetDrawableSize(ImGui_State *state, int &width, int &height) {
     // Does this even matter?
-    switch (state->renderer->current_backend) {
-    case renderer::Backend::OpenGL:
-        SDL_GL_GetDrawableSize(state->window, &width, &height);
-        break;
-
-    case renderer::Backend::Vulkan:
-        SDL_Vulkan_GetDrawableSize(state->window, &width, &height);
-        break;
-
-    default:
-        LOG_ERROR("Missing ImGui init for backend {}.", static_cast<int>(state->renderer->current_backend));
-    }
+    SDL_GetWindowSizeInPixels(state->window, &width, &height);
 }
 
 IMGUI_API ImTextureID ImGui_ImplSdl_CreateTexture(ImGui_State *state, void *data, int width, int height) {
