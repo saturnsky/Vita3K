@@ -391,8 +391,8 @@ static void draw_notice_info(GuiState &gui, EmuEnvState &emuenv) {
             draw_list->AddImage(gui.theme_information_bar_notice[NoticeIcon::NEW], NOTICE_ICON_POS, NOTICE_ICON_POS_MAX);
         else
             draw_list->AddCircleFilled(ImVec2(VIEWPORT_WIDTH_POS_MAX - (24.f * SCALE.x), VIEWPORT_POS.y + (16.f * SCALE.y)), 60.f * SCALE.x, IM_COL32(11.f, 90.f, 252.f, 255.f));
-        const auto FONT_SCALE = 40.f * SCALE.x;
-        const auto NOTICE_COUNT_FONT_SCALE = FONT_SCALE / 40.f;
+        const auto FONT_SCALE = 40.f;
+        const auto NOTICE_COUNT_FONT_SCALE = 1.f;
         const auto NOTICE_COUNT_SIZE = ImGui::CalcTextSize(std::to_string(notice_info_count_new).c_str()).x * NOTICE_COUNT_FONT_SCALE;
         draw_list->AddText(gui.vita_font, FONT_SCALE, ImVec2(VIEWPORT_WIDTH_POS_MAX - (NOTICE_SIZE.x / 2.f) - (NOTICE_COUNT_SIZE / 2.f) + (12.f * SCALE.x), VIEWPORT_POS.y + (15.f * SCALE.y)), NOTICE_COLOR, std::to_string(notice_info_count_new).c_str());
     } else {
@@ -613,9 +613,9 @@ void draw_information_bar(GuiState &gui, EmuEnvState &emuenv) {
     }
 
     constexpr auto PIX_FONT_SCALE = 19.2f / 24.f;
-    const auto DEFAULT_FONT_SCALE = ImGui::GetFontSize() / (19.2f * emuenv.manual_dpi_scale);
-    const auto CLOCK_DEFAULT_FONT_SCALE = (24.f * emuenv.manual_dpi_scale) * DEFAULT_FONT_SCALE;
-    const auto DAY_MOMENT_DEFAULT_FONT_SCALE = (18.f * emuenv.manual_dpi_scale) * DEFAULT_FONT_SCALE;
+    const auto DEFAULT_FONT_SCALE = ImGui::GetFontSize() / 19.2f;
+    const auto CLOCK_DEFAULT_FONT_SCALE = 24.f * DEFAULT_FONT_SCALE;
+    const auto DAY_MOMENT_DEFAULT_FONT_SCALE = 18.f * DEFAULT_FONT_SCALE;
     const auto CLOCK_FONT_SIZE_SCALE = CLOCK_DEFAULT_FONT_SCALE / ImGui::GetFontSize();
     const auto DAY_MOMENT_FONT_SIZE_SCALE = DAY_MOMENT_DEFAULT_FONT_SCALE / ImGui::GetFontSize();
 
@@ -627,17 +627,17 @@ void draw_information_bar(GuiState &gui, EmuEnvState &emuenv) {
 
     auto DATE_TIME = get_date_time(gui, emuenv, local);
     const auto CALC_CLOCK_SIZE = ImGui::CalcTextSize(DATE_TIME[DateTime::CLOCK].c_str());
-    const auto CLOCK_SIZE_SCALE = ImVec2((CALC_CLOCK_SIZE.x * CLOCK_FONT_SIZE_SCALE) * RES_SCALE.x, (CALC_CLOCK_SIZE.y * CLOCK_FONT_SIZE_SCALE * PIX_FONT_SCALE) * RES_SCALE.y);
+    const auto CLOCK_SIZE_SCALE = ImVec2(CALC_CLOCK_SIZE.x * CLOCK_FONT_SIZE_SCALE, CALC_CLOCK_SIZE.y * CLOCK_FONT_SIZE_SCALE * PIX_FONT_SCALE);
     const auto CALC_DAY_MOMENT_SIZE = ImGui::CalcTextSize(DATE_TIME[DateTime::DAY_MOMENT].c_str());
-    const auto DAY_MOMENT_SIZE_SCALE = emuenv.io.user_id.empty() || is_12_hour_format ? ImVec2((CALC_DAY_MOMENT_SIZE.x * DAY_MOMENT_FONT_SIZE_SCALE) * RES_SCALE.y, (CALC_DAY_MOMENT_SIZE.y * DAY_MOMENT_FONT_SIZE_SCALE * PIX_FONT_SCALE) * RES_SCALE.y) : ImVec2(0.f, 0.f);
+    const auto DAY_MOMENT_SIZE_SCALE = emuenv.io.user_id.empty() || is_12_hour_format ? ImVec2(CALC_DAY_MOMENT_SIZE.x * DAY_MOMENT_FONT_SIZE_SCALE, CALC_DAY_MOMENT_SIZE.y * DAY_MOMENT_FONT_SIZE_SCALE * PIX_FONT_SCALE) : ImVec2(0.f, 0.f);
 
     const ImVec2 CLOCK_POS(VIEWPORT_POS.x + INFO_BAR_SIZE.x - (64.f * SCALE.x) - CLOCK_SIZE_SCALE.x - DAY_MOMENT_SIZE_SCALE.x - is_notif_pos, VIEWPORT_POS.y + (INFO_BAR_SIZE.y / 2.f) - (CLOCK_SIZE_SCALE.y / 2.f));
     const auto DAY_MOMENT_POS = ImVec2(CLOCK_POS.x + CLOCK_SIZE_SCALE.x + (6.f * SCALE.x), CLOCK_POS.y + (CLOCK_SIZE_SCALE.y - DAY_MOMENT_SIZE_SCALE.y));
 
     // Draw clock
-    draw_list->AddText(gui.vita_font, CLOCK_DEFAULT_FONT_SCALE * RES_SCALE.x, CLOCK_POS, is_theme_color ? indicator_color : DEFAULT_INDICATOR_COLOR, DATE_TIME[DateTime::CLOCK].c_str());
+    draw_list->AddText(gui.vita_font, CLOCK_DEFAULT_FONT_SCALE, CLOCK_POS, is_theme_color ? indicator_color : DEFAULT_INDICATOR_COLOR, DATE_TIME[DateTime::CLOCK].c_str());
     if (emuenv.io.user_id.empty() || is_12_hour_format)
-        draw_list->AddText(gui.vita_font, DAY_MOMENT_DEFAULT_FONT_SCALE * RES_SCALE.x, DAY_MOMENT_POS, is_theme_color ? indicator_color : DEFAULT_INDICATOR_COLOR, DATE_TIME[DateTime::DAY_MOMENT].c_str());
+        draw_list->AddText(gui.vita_font, DAY_MOMENT_DEFAULT_FONT_SCALE, DAY_MOMENT_POS, is_theme_color ? indicator_color : DEFAULT_INDICATOR_COLOR, DATE_TIME[DateTime::DAY_MOMENT].c_str());
 
     // Set full size and position of battery
     const auto FULL_BATTERY_SIZE = 38.f * SCALE.x;

@@ -594,7 +594,7 @@ void draw_home_screen(GuiState &gui, EmuEnvState &emuenv) {
 
     auto &lang = gui.lang.home_screen;
 
-    ImGui::SetWindowFontScale(0.9f * VIEWPORT_RES_SCALE.x);
+    ImGui::SetWindowFontScale(0.9f);
 
     // Sort Apps list when is not sorted
     if (!gui.app_selector.is_app_list_sorted)
@@ -675,7 +675,7 @@ void draw_home_screen(GuiState &gui, EmuEnvState &emuenv) {
             app_compat_state = ALL_COMPAT_STATE;
         }
         if (ImGui::BeginMenu(lang["by_region"].c_str())) {
-            ImGui::SetWindowFontScale(1.1f * VIEWPORT_RES_SCALE.x);
+            ImGui::SetWindowFontScale(1.1f);
             if (ImGui::MenuItem(lang["usa"].c_str(), nullptr, app_region == USA))
                 app_region = USA;
             if (ImGui::MenuItem(lang["europe"].c_str(), nullptr, app_region == EURO))
@@ -687,7 +687,7 @@ void draw_home_screen(GuiState &gui, EmuEnvState &emuenv) {
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu(lang["by_type"].c_str())) {
-            ImGui::SetWindowFontScale(1.1f * VIEWPORT_RES_SCALE.x);
+            ImGui::SetWindowFontScale(1.1f);
             if (ImGui::MenuItem(lang["commercial"].c_str(), nullptr, app_region == COMMERCIAL))
                 app_region = COMMERCIAL;
             if (ImGui::MenuItem(lang["homebrew"].c_str(), nullptr, app_region == HOMEBREW))
@@ -695,7 +695,7 @@ void draw_home_screen(GuiState &gui, EmuEnvState &emuenv) {
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu(lang["by_compatibility_state"].c_str())) {
-            ImGui::SetWindowFontScale(1.1f * VIEWPORT_RES_SCALE.x);
+            ImGui::SetWindowFontScale(1.1f);
             if (ImGui::MenuItem(lang["all"].c_str(), nullptr, app_compat_state == ALL_COMPAT_STATE))
                 app_compat_state = ALL_COMPAT_STATE;
             auto &lang_compat = gui.lang.compatibility.states;
